@@ -1,0 +1,30 @@
+---------Health Insurance---------------
+
+Basic Requirements :-
+
+1) User will purchase a plan
+
+2) Categorize Policy in to three types individaul health insurance, family health insurance , corparate health insurance
+
+3) Some polices comes under two or more categorires eg : cancer policy can be given to single individual or family etcc.
+
+4) Customer login portal through registred mobile no,email or policy id,
+
+5) can use the polcies he applied ,whether he can claim it or not, personal details, pay premium ,can change the instalment plan like from yearly to quarterly, and can renew the policy
+
+6) when ever user need to claim , he will approach the hosiptal with the plan , and healthprovider will reach the company and through bills they will claim the money 
+
+7) when ever user will apply for policy for certain polices they will perform full body checkup and from the report the agent will upload in the agent portal , through ml/ai we will detect the potienal diease the person have and from that we can accept or reject the policy by the admin---(If possible)
+
+8) In agent portal we will have graph ,analytics how many polices he applied how share track the progress through graph .....(need to think)
+
+9) The admin will approve the application or may reject the application  will approve the claim if conditions meet,
+everything....(need to think)
+
+10) Three kinds of role admin, customer ,agent
+
+Sepcial Requirements:-
+
+1) Show updates on insurance that are going to expire in a month.
+
+2) Allow renewal at a discounted price if no claim was made the previous year
