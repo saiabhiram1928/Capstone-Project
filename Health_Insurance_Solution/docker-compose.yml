@@ -1,0 +1,22 @@
+version: '3.4'
+networks:
+    healthInsuranceNetwork:  
+services:
+  SqlServerDb:
+        container_name: SqlServerContainer
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        ports:
+            - 8002:1433
+        environment:
+            - ACCEPT_EULA=Y
+            - MSSQL_SA_PASSWORD=Test@1234 
+  health_insurance_application:
+    container_name: Health_Insurance_Application
+    image: ${DOCKER_REGISTRY-}healthinsuranceapplication
+    ports:
+          - 8001:80 
+    build:
+      context: .
+      dockerfile: Health_Insurance_Application/Dockerfile
+    depends_on:
+            - SqlServerDb

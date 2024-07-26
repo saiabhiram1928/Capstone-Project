@@ -28,3 +28,24 @@ Sepcial Requirements:-
 1) Show updates on insurance that are going to expire in a month.
 
 2) Allow renewal at a discounted price if no claim was made the previous year
+
+
+Admin functionlity
+
+1) Put new policy , edit scehmes
+
+2) Approve claim , reject
+
+Agent 
+
+1) All the Patients
+
+2) How much Amount Settled for a particular
+
+customer
+
+1) List of Polices
+
+2) Purchasing of plocies
+
+3) Claim the amount 
