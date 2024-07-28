@@ -14,5 +14,13 @@ namespace Health_Insurance_Application.Models
         public SchemeTypeEnum SchemeType { get; set; }
 
         public float BasePremiumAmount { get; set; }
+
+        public DateTime SchemeStartedAt { get; set; }
+        public DateTime SchemeLastUpdatedAt {  get; set; }
+
+        public string RouteTitle { get; set; }
+
+        public int PaymentTerm {  get; set; }    //in years
+        public int CoverageYears { get; set; } // in years and alway greater than paymentTerm
     }
 }

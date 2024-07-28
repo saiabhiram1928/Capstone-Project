@@ -26,14 +26,12 @@ namespace Health_Insurance_Application.Services
             user.Zipcode = userRegisterDTO.Zipcode;
             user.Email = userRegisterDTO.Email;
             user.Role = roleEnum;
-            user.City = userRegisterDTO.City;
-            user.Street = userRegisterDTO.Street;
+            user.Address = userRegisterDTO.Address;
             user.MobileNumber = userRegisterDTO.MobileNumber;
             user.LastUpdated = DateTime.Now;
             user.CreatedAt =DateTime.Now;
             user.Salt = salt;
             user.Password  = passwd;
-            user.State = userRegisterDTO.State;
             return user;
             
         }

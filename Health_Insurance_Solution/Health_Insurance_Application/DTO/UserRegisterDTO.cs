@@ -18,11 +18,7 @@ namespace Health_Insurance_Application.DTO
         ErrorMessage = "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.")]
         public string Password { get; set; }
         [Required]
-        public string Street { get; set; }
-        [Required]
-        public string City { get; set; }
-        [Required]
-        public string State { get; set; }
+        public string Address { get; set; }
         [Required]
         public string Zipcode { get; set; }
         [Required]

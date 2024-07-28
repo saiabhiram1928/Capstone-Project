@@ -22,9 +22,7 @@ namespace Health_Insurance_Application.Models
         [Required]
         public byte[] Salt { get; set; }
         public RoleEnum Role { get ; set; }
-        public string Street { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
+        public string Address { get; set; }
         public string Zipcode { get; set; }
         public string MobileNumber { get; set; }
         public DateTime CreatedAt { get; set; } 

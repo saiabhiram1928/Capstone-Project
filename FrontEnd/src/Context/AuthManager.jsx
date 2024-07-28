@@ -9,7 +9,11 @@ const useAuth = () => {
 
   const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(false)
+
+
+    const user = true;
     const value = {
+      user
       }
     
       return (
@@ -21,3 +25,5 @@ const useAuth = () => {
       )
   }
 
+export default AuthProvider
+export {useAuth}

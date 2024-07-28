@@ -1,8 +1,17 @@
 import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
+import AuthProvider from './Context/AuthManager'
+import RoutesManager from './Context/RoutesManager'
+
 
 const App = () => {
+ 
   return (
-    <div>App</div>
+    <BrowserRouter>
+   <AuthProvider>
+    <RoutesManager/>
+   </AuthProvider>
+   </BrowserRouter>
   )
 }
 

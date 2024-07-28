@@ -6,6 +6,7 @@ namespace Health_Insurance_Application.Models
     public class Payment
     {
         [Key]
+        public int Id { get; set; } 
         public int TransactionId { get; set; }
 
         public int PolicyId { get; set; }
@@ -17,6 +18,9 @@ namespace Health_Insurance_Application.Models
         public DateTime PaymentDate { get; set; }
         public string PaymentStatus { get; set; }
         public string Remarks { get; set; }
-        public float PaymentAmount { get; set; }    
+        public float PaymentAmount { get; set; }   
+        public bool PaymentDone { get; set; }
+
+        public bool PaymentDueDate { get; set; }
     }
 }

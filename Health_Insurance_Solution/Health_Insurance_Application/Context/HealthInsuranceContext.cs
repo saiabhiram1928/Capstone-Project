@@ -41,9 +41,7 @@ namespace Health_Insurance_Application.Context
                         Password = hmac.ComputeHash(Encoding.UTF8.GetBytes("Test@1234")),
                         Salt = user1Salt,
                         Role = RoleEnum.Customer,
-                        Street = "Test Lorem , blaaa",
-                        City = "Springfield",
-                        State = "IL",
+                        Address = "St Street opp lalbagh, chennai , TamilNadu",
                         Zipcode = "507001",
                         MobileNumber = "7673978319",
                         CreatedAt = DateTime.Now,
@@ -58,9 +56,7 @@ namespace Health_Insurance_Application.Context
                         Password = hmac.ComputeHash(Encoding.UTF8.GetBytes("Test@1234")),
                         Salt = user2Salt,
                         Role = RoleEnum.Agent,
-                        Street = "Test lorem , fam",
-                        City = "Springfield",
-                        State = "IL",
+                        Address = "St Street opp lalbagh, chennai , TamilNadu",
                         Zipcode = "507002",
                         MobileNumber = "9999999999",
                         CreatedAt = DateTime.Now,
@@ -75,15 +71,13 @@ namespace Health_Insurance_Application.Context
                         Password = hmac.ComputeHash(Encoding.UTF8.GetBytes("Test@1234")),
                         Salt = user3Salt,
                         Role = RoleEnum.Admin,
-                        Street = "789 Oak St",
-                        City = "Springfield",
-                        State = "IL",
+                        Address = "St Street opp lalbagh, chennai , TamilNadu",
                         Zipcode = "507003",
                         MobileNumber = "111111111",
                         CreatedAt = DateTime.Now,
                         LastUpdated = DateTime.Now
                     }
-                );
+                );;
 
                 // Seed Admins
                 modelBuilder.Entity<Admin>().HasData(
