@@ -35,5 +35,16 @@ namespace Health_Insurance_Application.Services
             return user;
             
         }
+
+        public SchemeRoutesDTO MapSchemeToSchemeRouteDTO(Scheme scheme)
+        {
+            SchemeRoutesDTO schemeRoutesDTO = new SchemeRoutesDTO();
+            schemeRoutesDTO.SchemeName = scheme.SchemeName;
+            schemeRoutesDTO.SchemeRoute = scheme.RouteTitle;
+            schemeRoutesDTO.SchemeType = scheme.SchemeType.ToString();
+            schemeRoutesDTO.SmallDesc = scheme.SmallDescription;
+            return schemeRoutesDTO;
+
+        }
     }
 }

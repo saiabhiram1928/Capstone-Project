@@ -117,25 +117,154 @@ namespace Health_Insurance_Application.Context
 
                 // Seed Schemes
                 modelBuilder.Entity<Scheme>().HasData(
-                    new Scheme
-                    {
-                        SchemeId = 1,
-                        SchemeName = "Basic Health Plan",
-                        SchemeDescription = "Provides basic health coverage.",
-                        CoverageAmount = 10000.0f,
-                        SchemeType = SchemeTypeEnum.Individual,
-                        BasePremiumAmount = 500.0f
-                    },
-                    new Scheme
-                    {
-                        SchemeId = 2,
-                        SchemeName = "Family Health Plan",
-                        SchemeDescription = "Provides health coverage for families.",
-                        CoverageAmount = 25000.0f,
-                        SchemeType = SchemeTypeEnum.Family,
-                        BasePremiumAmount = 750.0f
-                    }
-                );
+                        //Individual
+                        new Scheme
+                        {
+                            SchemeId = 1,
+                            SchemeName = "Individual Basic Plan",
+                            SchemeDescription = "The Individual Basic Plan offers essential health coverage for individuals at an affordable premium. This plan includes coverage for hospitalization, surgery, and emergency care. It is designed for those seeking fundamental protection against medical expenses.",
+                            CoverageAmount = 500000,
+                            SchemeType = SchemeTypeEnum.Individual,
+                            BasePremiumAmount = 5000,
+                            SchemeStartedAt = new DateTime(2020, 1, 1),
+                            SchemeLastUpdatedAt = DateTime.Now,
+                            PaymentTerm = 5,
+                            CoverageYears = 10,
+                            RouteTitle = "individual-basic-plan",
+                            BaseCoverageAmount = 100000,
+                            SmallDescription = "A Plan For Every Individual Which Covers Basic Need"
+                        },
+                        new Scheme
+                        {
+                            SchemeId = 2,
+                            SchemeName = "Individual Premium Plan",
+                            SchemeDescription = "The Individual Premium Plan provides extensive health coverage for individuals, including benefits for outpatient treatments, specialist consultations, and preventive care. This plan is ideal for those who want a higher level of health security and comprehensive medical benefits.",
+                            CoverageAmount = 1000000,
+                            SchemeType = SchemeTypeEnum.Individual,
+                            BasePremiumAmount = 10000,
+                            SchemeStartedAt = new DateTime(2021, 6, 15),
+                            SchemeLastUpdatedAt = DateTime.Now,
+                            PaymentTerm = 7,
+                            CoverageYears = 15,
+                            RouteTitle = "individual-premium-plan",
+                            BaseCoverageAmount = 250000,
+                            SmallDescription = "A Plan For Every Person Which Covers the Needs"
+                        },
+                        new Scheme
+                        {
+                            SchemeId = 3,
+                            SchemeName = "Individual Elite Plan",
+                            SchemeDescription = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda voluptatem totam similique nobis dolore in, velit consectetur perspiciatis vero quas. Esse deleniti commodi perferendis officia saepe natus, quas dolor. Perspiciatis iusto nam optio quo natus amet velit explicabo quod, officia adipisci quia ipsum odio deleniti, fugiat esse illum tenetur obcaecati corporis quasi quibusdam dolorum laboriosam in. Numquam autem temporibus molestiae delectus sequi cupiditate suscipit natus facere enim dolorum sed eaque voluptas repellendus officiis et doloremque totam pariatur, quae, non amet explicabo. Maxime, magni! Ea voluptate aspernatur impedit vitae quasi necessitatibus. Ex, commodi quaerat. Dolor deleniti eos amet non. Optio minima quos incidunt recusandae eveniet, consequuntur earum quam nesciunt tenetur deserunt voluptas tempora ipsa omnis ipsam a iusto rerum, obcaecati aut nulla quo, blanditiis perferendis? Quam quo alias error possimus impedit sapiente commodi earum quaerat? Quas natus rem voluptate, at nostrum ut itaque voluptatibus porro velit labore consequatur obcaecati et nulla nihil cum, provident ratione iusto esse iure! Porro, totam cumque molestias officia minus vel molestiae, quod alias excepturi pariatur voluptates quae, cupiditate voluptatem fugit delectus. Ipsa temporibus similique odit veniam quo, cupiditate nesciunt dignissimos consequuntur aperiam, eveniet facilis recusandae voluptates nulla quaerat mollitia labore quae! Sapiente odio deserunt eum suscipit.",
+                            CoverageAmount = 2000000,
+                            SchemeType = SchemeTypeEnum.Individual,
+                            BasePremiumAmount = 20000,
+                            SchemeStartedAt = new DateTime(2022, 3, 10),
+                            SchemeLastUpdatedAt = DateTime.Now,
+                            PaymentTerm = 10,
+                            CoverageYears = 20,
+                            RouteTitle = "individual-elite-plan",
+                            BaseCoverageAmount = 500000,
+                            SmallDescription = "A Plan for Every Individual for every need"
+                        },
+                        // Corporate Schemes
+                        new Scheme
+                        {
+                            SchemeId = 4,
+                            SchemeName = "Corporate Standard Plan",
+                            SchemeDescription = "The Corporate Standard Plan offers essential health coverage for employees of small and medium-sized businesses. It includes hospitalization and emergency care benefits, providing basic protection to ensure the well-being of your workforce.",
+                            CoverageAmount = 1000000,
+                            SchemeType = SchemeTypeEnum.Corporate,
+                            BasePremiumAmount = 15000,
+                            SchemeStartedAt = new DateTime(2019, 5, 20),
+                            SchemeLastUpdatedAt = DateTime.Now,
+                            PaymentTerm = 5,
+                            CoverageYears = 10,
+                            RouteTitle = "corporate-standard-plan",
+                            BaseCoverageAmount = 200000,
+                            SmallDescription = "A Plan For Every Corporate Standard Covers basic need"
+                        },
+                        new Scheme
+                        {
+                            SchemeId = 5,
+                            SchemeName = "Corporate Comprehensive Plan",
+                            SchemeDescription = "The Corporate Comprehensive Plan provides extensive health coverage for employees, including benefits for outpatient treatments, preventive care, and specialist consultations. This plan is designed for businesses that want to offer their employees a higher level of health security and comprehensive medical benefits.",
+                            CoverageAmount = 2500000,
+                            SchemeType = SchemeTypeEnum.Corporate,
+                            BasePremiumAmount = 30000,
+                            SchemeStartedAt = new DateTime(2020, 8, 25),
+                            SchemeLastUpdatedAt = DateTime.Now,
+                            PaymentTerm = 7,
+                            CoverageYears = 15,
+                            RouteTitle = "corporate-comprehensive-plan",
+                            BaseCoverageAmount = 500000,
+                            SmallDescription = "A Huge Amount Coverage For  Corporate with Higer number Of Employeess "
+                        },
+                        new Scheme
+                        {
+                            SchemeId = 6,
+                            SchemeName = "Corporate Premium Plan",
+                            SchemeDescription = "The Corporate Premium Plan offers the highest level of health coverage for corporate employees, including extensive inpatient and outpatient benefits, dental care, and access to a wide network of top healthcare providers. This plan is tailored for businesses that seek to provide the ultimate health protection and peace of mind for their employees.",
+                            CoverageAmount = 5000000,
+                            SchemeType = SchemeTypeEnum.Corporate,
+                            BasePremiumAmount = 50000,
+                            SchemeStartedAt = new DateTime(2021, 11, 30),
+                            SchemeLastUpdatedAt = DateTime.Now,
+                            PaymentTerm = 10,
+                            CoverageYears = 20,
+                            RouteTitle = "corporate-premium-plan",
+                            BaseCoverageAmount = 1000000,
+                            SmallDescription = "Best Corporate Plan , with Highest Claim Sucess Rate"
+                        },
+                        // Family Schemes
+                        new Scheme
+                        {
+                            SchemeId = 7,
+                            SchemeName = "Family Basic Plan",
+                            SchemeDescription = "The Family Basic Plan offers essential health coverage for families, including hospitalization and emergency care benefits. This plan is designed to provide fundamental protection for your family’s health needs at an affordable premium.",
+                            CoverageAmount = 1000000,
+                            SchemeType = SchemeTypeEnum.Family,
+                            BasePremiumAmount = 20000,
+                            SchemeStartedAt = new DateTime(2018, 2, 14),
+                            SchemeLastUpdatedAt = DateTime.Now,
+                            PaymentTerm = 5,
+                            CoverageYears = 10,
+                            RouteTitle = "family-basic-plan",
+                            BaseCoverageAmount = 200000,
+                            SmallDescription = "The best plan with lowest Rate"
+                        },
+                        new Scheme
+                        {
+                            SchemeId = 8,
+                            SchemeName = "Family Comprehensive Plan",
+                            SchemeDescription = "The Family Comprehensive Plan provides extensive health coverage for families, including benefits for outpatient treatments, specialist consultations, and preventive care. This plan is ideal for families seeking a higher level of health security and comprehensive medical benefits.",
+                            CoverageAmount = 3000000,
+                            SchemeType = SchemeTypeEnum.Family,
+                            BasePremiumAmount = 40000,
+                            SchemeStartedAt = new DateTime(2019, 7, 19),
+                            SchemeLastUpdatedAt = DateTime.Now,
+                            PaymentTerm = 7,
+                            CoverageYears = 15,
+                            RouteTitle = "family-comprehensive-plan",
+                            BaseCoverageAmount = 600000,
+                            SmallDescription = "Huge Amount Coverage which solves most of the needs"
+                        },
+                        new Scheme
+                        {
+                            SchemeId = 9,
+                            SchemeName = "Family Elite Plan",
+                            SchemeDescription = "The Family Elite Plan offers the highest level of health coverage for families, including extensive inpatient and outpatient benefits, dental care, and access to a wide network of top healthcare providers. This plan is tailored for families that seek the ultimate health protection and peace of mind.",
+                            CoverageAmount = 6000000,
+                            SchemeType = SchemeTypeEnum.Family,
+                            BasePremiumAmount = 60000,
+                            SchemeStartedAt = new DateTime(2020, 10, 25),
+                            SchemeLastUpdatedAt = DateTime.Now,
+                            PaymentTerm = 10,
+                            CoverageYears = 20,
+                            RouteTitle = "family-elite-plan",
+                            BaseCoverageAmount = 1200000,
+                            SmallDescription= "The best Plan To Take Care of your family from every danger"
+                        }
+                        );
 
                 // Seed Claims
                 modelBuilder.Entity<Claims>().HasData(
@@ -168,7 +297,8 @@ namespace Health_Insurance_Application.Context
                 modelBuilder.Entity<Payment>().HasData(
                     new Payment
                     {
-                        TransactionId = 1,
+                        Id = 10001,
+                        TransactionId = 100001,
                         PolicyId = 1,
                         CustomerId = 10001,
                         PaymentDate = DateTime.Now,

@@ -1,6 +1,7 @@
 ﻿using Health_Insurance_Application.DTO;
 using Health_Insurance_Application.Exceptions;
 using Health_Insurance_Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.Common;
@@ -44,6 +45,7 @@ namespace Health_Insurance_Application.Controllers
                 return StatusCode(500, new { message = ex.Message });
             }
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost("createUser")]
         [ProducesResponseType(typeof(UserReturnDTO), StatusCodes.Status200OK)]
         public async Task<IActionResult> createUser([FromBody] UserRegisterDTO registerDTO , [FromQuery] string destRole)

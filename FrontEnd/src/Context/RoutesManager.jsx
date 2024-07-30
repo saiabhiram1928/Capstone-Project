@@ -21,6 +21,8 @@ const RoutesManager = () => {
        <Route path='/scheme/family/' element = {<Layout><Schemes_Page data = {schemeData.family}/></Layout> }/>
        <Route path='/scheme/corporate/' element = {<Layout><Schemes_Page data = {schemeData.corporate}/></Layout> }/>
        <Route path = '/scheme/individual/:name' element = {<Layout><Scheme_Page/></Layout>}/>
+       <Route path = '/scheme/family/:name' element = {<Layout><Scheme_Page/></Layout>}/>
+       <Route path = '/scheme/corporate/:name' element = {<Layout><Scheme_Page/></Layout>}/>
        
        
       {

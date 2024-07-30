@@ -24,6 +24,16 @@ namespace Health_Insurance_Application
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddHttpContextAccessor();
+            #region Cors
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder => builder.AllowAnyOrigin()
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod());
+            });
+
+            #endregion
             #region JWT
             builder.Services.AddSwaggerGen(option =>
             {
@@ -90,6 +100,7 @@ namespace Health_Insurance_Application
             #region Services
             builder.Services.AddScoped<IDTOService, DTOService>();
             builder.Services.AddScoped<IUserAuthService, UserAuthService>();
+            builder.Services.AddScoped<ISchemeServices, SchemeServices>();
             #endregion
 
             var app = builder.Build();
@@ -105,7 +116,7 @@ namespace Health_Insurance_Application
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
+            app.UseCors("AllowAllOrigins");
 
             app.MapControllers();
 

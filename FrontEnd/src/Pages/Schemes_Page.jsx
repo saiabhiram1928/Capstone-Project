@@ -1,5 +1,6 @@
 import { Typography } from '@material-tailwind/react'
 import React from 'react'
+import Pricing_Card_Component from '../Components/Pricing_Card_Component'
 
 const Schemes_Page = ({data}) => {
   // console.log(title , question, answer,blockdata);
@@ -28,9 +29,37 @@ const Schemes_Page = ({data}) => {
     </div>
   </div>
 </section>
-<section>
-  A List Of Schemes
-</section>
+<section className="py-24 px-8 bg-[#EFF0F4]">
+      <div className="container mx-auto">
+        <Typography
+          color="blue-gray"
+          className="mb-4 font-bold text-lg"
+        >
+          Pricing Plans
+        </Typography>
+        <Typography
+          variant="h1"
+          color="blue-gray"
+          className="mb-4 !leading-snug lg:!text-4xl !text-2xl max-w-2xl"
+        >
+          Invest in a plan that&apos;s as ambitious as your corporate goals.
+        </Typography>
+        <Typography
+          variant="lead"
+          className="mb-10 font-normal !text-gray-500 max-w-xl"
+        >
+          Compare the benefits and features of each plan below to find the ideal
+          match for your business&apos;s budget and ambitions.
+        </Typography>
+        <div className="grid gap-y-8 md:grid-cols-1 lg:grid-cols-2 items-center justify-center">
+
+          <Pricing_Card_Component/>
+          <Pricing_Card_Component/>
+          <Pricing_Card_Component/>
+          <Pricing_Card_Component/>
+        </div>
+      </div>
+    </section>
     </div>
   )
 }

@@ -37,7 +37,13 @@ namespace Health_Insurance_Application.Migrations
                     SchemeDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CoverageAmount = table.Column<float>(type: "real", nullable: false),
                     SchemeType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BasePremiumAmount = table.Column<float>(type: "real", nullable: false)
+                    BasePremiumAmount = table.Column<float>(type: "real", nullable: false),
+                    SchemeStartedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SchemeLastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RouteTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PaymentTerm = table.Column<int>(type: "int", nullable: false),
+                    CoverageYears = table.Column<int>(type: "int", nullable: false),
+                    BaseCoverageAmount = table.Column<float>(type: "real", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,9 +62,7 @@ namespace Health_Insurance_Application.Migrations
                     Password = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     Salt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Zipcode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -218,18 +222,21 @@ namespace Health_Insurance_Application.Migrations
                 name: "Payments",
                 columns: table => new
                 {
-                    TransactionId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    TransactionId = table.Column<int>(type: "int", nullable: false),
                     PolicyId = table.Column<int>(type: "int", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PaymentStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Remarks = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PaymentAmount = table.Column<float>(type: "real", nullable: false)
+                    PaymentAmount = table.Column<float>(type: "real", nullable: false),
+                    PaymentDone = table.Column<bool>(type: "bit", nullable: false),
+                    PaymentDueDate = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Payments", x => x.TransactionId);
+                    table.PrimaryKey("PK_Payments", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Payments_Customers_CustomerId",
                         column: x => x.CustomerId,
@@ -283,21 +290,28 @@ namespace Health_Insurance_Application.Migrations
 
             migrationBuilder.InsertData(
                 table: "Schemes",
-                columns: new[] { "SchemeId", "BasePremiumAmount", "CoverageAmount", "SchemeDescription", "SchemeName", "SchemeType" },
+                columns: new[] { "SchemeId", "BaseCoverageAmount", "BasePremiumAmount", "CoverageAmount", "CoverageYears", "PaymentTerm", "RouteTitle", "SchemeDescription", "SchemeLastUpdatedAt", "SchemeName", "SchemeStartedAt", "SchemeType" },
                 values: new object[,]
                 {
-                    { 1, 500f, 10000f, "Provides basic health coverage.", "Basic Health Plan", "Individual" },
-                    { 2, 750f, 25000f, "Provides health coverage for families.", "Family Health Plan", "Family" }
+                    { 1, 0f, 5000f, 500000f, 10, 5, "individual-basic-plan", "The Individual Basic Plan offers essential health coverage for individuals at an affordable premium. This plan includes coverage for hospitalization, surgery, and emergency care. It is designed for those seeking fundamental protection against medical expenses.", new DateTime(2024, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(274), "Individual Basic Plan", new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Individual" },
+                    { 2, 0f, 10000f, 1000000f, 15, 7, "individual-premium-plan", "The Individual Premium Plan provides extensive health coverage for individuals, including benefits for outpatient treatments, specialist consultations, and preventive care. This plan is ideal for those who want a higher level of health security and comprehensive medical benefits.", new DateTime(2024, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(277), "Individual Premium Plan", new DateTime(2021, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "Individual" },
+                    { 3, 0f, 20000f, 2000000f, 20, 10, "individual-elite-plan", "Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda voluptatem totam similique nobis dolore in, velit consectetur perspiciatis vero quas. Esse deleniti commodi perferendis officia saepe natus, quas dolor. Perspiciatis iusto nam optio quo natus amet velit explicabo quod, officia adipisci quia ipsum odio deleniti, fugiat esse illum tenetur obcaecati corporis quasi quibusdam dolorum laboriosam in. Numquam autem temporibus molestiae delectus sequi cupiditate suscipit natus facere enim dolorum sed eaque voluptas repellendus officiis et doloremque totam pariatur, quae, non amet explicabo. Maxime, magni! Ea voluptate aspernatur impedit vitae quasi necessitatibus. Ex, commodi quaerat. Dolor deleniti eos amet non. Optio minima quos incidunt recusandae eveniet, consequuntur earum quam nesciunt tenetur deserunt voluptas tempora ipsa omnis ipsam a iusto rerum, obcaecati aut nulla quo, blanditiis perferendis? Quam quo alias error possimus impedit sapiente commodi earum quaerat? Quas natus rem voluptate, at nostrum ut itaque voluptatibus porro velit labore consequatur obcaecati et nulla nihil cum, provident ratione iusto esse iure! Porro, totam cumque molestias officia minus vel molestiae, quod alias excepturi pariatur voluptates quae, cupiditate voluptatem fugit delectus. Ipsa temporibus similique odit veniam quo, cupiditate nesciunt dignissimos consequuntur aperiam, eveniet facilis recusandae voluptates nulla quaerat mollitia labore quae! Sapiente odio deserunt eum suscipit.", new DateTime(2024, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(278), "Individual Elite Plan", new DateTime(2022, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), "Individual" },
+                    { 4, 0f, 15000f, 1000000f, 10, 5, "corporate-standard-plan", "The Corporate Standard Plan offers essential health coverage for employees of small and medium-sized businesses. It includes hospitalization and emergency care benefits, providing basic protection to ensure the well-being of your workforce.", new DateTime(2024, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(280), "Corporate Standard Plan", new DateTime(2019, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), "Corporate" },
+                    { 5, 0f, 30000f, 2500000f, 15, 7, "corporate-comprehensive-plan", "The Corporate Comprehensive Plan provides extensive health coverage for employees, including benefits for outpatient treatments, preventive care, and specialist consultations. This plan is designed for businesses that want to offer their employees a higher level of health security and comprehensive medical benefits.", new DateTime(2024, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(281), "Corporate Comprehensive Plan", new DateTime(2020, 8, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), "Corporate" },
+                    { 6, 0f, 50000f, 5000000f, 20, 10, "corporate-premium-plan", "The Corporate Premium Plan offers the highest level of health coverage for corporate employees, including extensive inpatient and outpatient benefits, dental care, and access to a wide network of top healthcare providers. This plan is tailored for businesses that seek to provide the ultimate health protection and peace of mind for their employees.", new DateTime(2024, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(283), "Corporate Premium Plan", new DateTime(2021, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), "Corporate" },
+                    { 7, 0f, 20000f, 1000000f, 10, 5, "family-basic-plan", "The Family Basic Plan offers essential health coverage for families, including hospitalization and emergency care benefits. This plan is designed to provide fundamental protection for your family’s health needs at an affordable premium.", new DateTime(2024, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(284), "Family Basic Plan", new DateTime(2018, 2, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), "Family" },
+                    { 8, 0f, 40000f, 3000000f, 15, 7, "family-comprehensive-plan", "The Family Comprehensive Plan provides extensive health coverage for families, including benefits for outpatient treatments, specialist consultations, and preventive care. This plan is ideal for families seeking a higher level of health security and comprehensive medical benefits.", new DateTime(2024, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(285), "Family Comprehensive Plan", new DateTime(2019, 7, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), "Family" },
+                    { 9, 0f, 60000f, 6000000f, 20, 10, "family-elite-plan", "The Family Elite Plan offers the highest level of health coverage for families, including extensive inpatient and outpatient benefits, dental care, and access to a wide network of top healthcare providers. This plan is tailored for families that seek the ultimate health protection and peace of mind.", new DateTime(2024, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(286), "Family Elite Plan", new DateTime(2020, 10, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), "Family" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Uid", "City", "CreatedAt", "Email", "FirstName", "LastName", "LastUpdated", "MobileNumber", "Password", "Role", "Salt", "State", "Street", "Zipcode" },
+                columns: new[] { "Uid", "Address", "CreatedAt", "Email", "FirstName", "LastName", "LastUpdated", "MobileNumber", "Password", "Role", "Salt", "Zipcode" },
                 values: new object[,]
                 {
-                    { 101, "Springfield", new DateTime(2024, 7, 26, 10, 57, 20, 645, DateTimeKind.Local).AddTicks(2208), "customer1@gmail.com", "Customer", "Test", new DateTime(2024, 7, 26, 10, 57, 20, 645, DateTimeKind.Local).AddTicks(2227), "7673978319", new byte[] { 17, 251, 9, 14, 233, 201, 13, 115, 36, 179, 112, 37, 192, 167, 166, 156, 178, 46, 40, 94, 191, 75, 25, 152, 160, 140, 160, 39, 213, 106, 170, 9, 246, 12, 186, 149, 40, 50, 125, 239, 100, 249, 86, 176, 22, 84, 165, 102, 132, 155, 26, 228, 217, 133, 160, 190, 151, 229, 4, 198, 184, 209, 217, 199 }, "Customer", new byte[] { 4, 140, 201, 167, 93, 180, 5, 31, 224, 11, 247, 51, 241, 158, 144, 165, 127, 180, 190, 42, 138, 243, 134, 202, 144, 203, 186, 77, 245, 82, 110, 241, 12, 194, 101, 81, 246, 90, 220, 76, 171, 154, 220, 127, 215, 115, 13, 75, 134, 23, 58, 101, 232, 60, 242, 193, 54, 58, 231, 138, 119, 27, 62, 229, 130, 111, 242, 10, 222, 49, 140, 48, 111, 12, 90, 14, 123, 5, 83, 193, 150, 35, 89, 164, 60, 198, 44, 246, 29, 133, 126, 82, 27, 171, 105, 36, 38, 244, 252, 178, 76, 105, 27, 154, 8, 173, 73, 131, 81, 229, 210, 63, 155, 28, 200, 43, 233, 31, 145, 242, 224, 196, 249, 230, 194, 151, 33, 99 }, "IL", "Test Lorem , blaaa", "507001" },
-                    { 102, "Springfield", new DateTime(2024, 7, 26, 10, 57, 20, 645, DateTimeKind.Local).AddTicks(2247), "agent@gmail.com", "Agent", "Test", new DateTime(2024, 7, 26, 10, 57, 20, 645, DateTimeKind.Local).AddTicks(2248), "9999999999", new byte[] { 17, 251, 9, 14, 233, 201, 13, 115, 36, 179, 112, 37, 192, 167, 166, 156, 178, 46, 40, 94, 191, 75, 25, 152, 160, 140, 160, 39, 213, 106, 170, 9, 246, 12, 186, 149, 40, 50, 125, 239, 100, 249, 86, 176, 22, 84, 165, 102, 132, 155, 26, 228, 217, 133, 160, 190, 151, 229, 4, 198, 184, 209, 217, 199 }, "Agent", new byte[] { 4, 140, 201, 167, 93, 180, 5, 31, 224, 11, 247, 51, 241, 158, 144, 165, 127, 180, 190, 42, 138, 243, 134, 202, 144, 203, 186, 77, 245, 82, 110, 241, 12, 194, 101, 81, 246, 90, 220, 76, 171, 154, 220, 127, 215, 115, 13, 75, 134, 23, 58, 101, 232, 60, 242, 193, 54, 58, 231, 138, 119, 27, 62, 229, 130, 111, 242, 10, 222, 49, 140, 48, 111, 12, 90, 14, 123, 5, 83, 193, 150, 35, 89, 164, 60, 198, 44, 246, 29, 133, 126, 82, 27, 171, 105, 36, 38, 244, 252, 178, 76, 105, 27, 154, 8, 173, 73, 131, 81, 229, 210, 63, 155, 28, 200, 43, 233, 31, 145, 242, 224, 196, 249, 230, 194, 151, 33, 99 }, "IL", "Test lorem , fam", "507002" },
-                    { 103, "Springfield", new DateTime(2024, 7, 26, 10, 57, 20, 645, DateTimeKind.Local).AddTicks(2323), "admin@gmail.com", "Admin", "Test", new DateTime(2024, 7, 26, 10, 57, 20, 645, DateTimeKind.Local).AddTicks(2323), "111111111", new byte[] { 17, 251, 9, 14, 233, 201, 13, 115, 36, 179, 112, 37, 192, 167, 166, 156, 178, 46, 40, 94, 191, 75, 25, 152, 160, 140, 160, 39, 213, 106, 170, 9, 246, 12, 186, 149, 40, 50, 125, 239, 100, 249, 86, 176, 22, 84, 165, 102, 132, 155, 26, 228, 217, 133, 160, 190, 151, 229, 4, 198, 184, 209, 217, 199 }, "Admin", new byte[] { 4, 140, 201, 167, 93, 180, 5, 31, 224, 11, 247, 51, 241, 158, 144, 165, 127, 180, 190, 42, 138, 243, 134, 202, 144, 203, 186, 77, 245, 82, 110, 241, 12, 194, 101, 81, 246, 90, 220, 76, 171, 154, 220, 127, 215, 115, 13, 75, 134, 23, 58, 101, 232, 60, 242, 193, 54, 58, 231, 138, 119, 27, 62, 229, 130, 111, 242, 10, 222, 49, 140, 48, 111, 12, 90, 14, 123, 5, 83, 193, 150, 35, 89, 164, 60, 198, 44, 246, 29, 133, 126, 82, 27, 171, 105, 36, 38, 244, 252, 178, 76, 105, 27, 154, 8, 173, 73, 131, 81, 229, 210, 63, 155, 28, 200, 43, 233, 31, 145, 242, 224, 196, 249, 230, 194, 151, 33, 99 }, "IL", "789 Oak St", "507003" }
+                    { 101, "St Street opp lalbagh, chennai , TamilNadu", new DateTime(2024, 7, 29, 16, 50, 55, 19, DateTimeKind.Local).AddTicks(9976), "customer1@gmail.com", "Customer", "Test", new DateTime(2024, 7, 29, 16, 50, 55, 19, DateTimeKind.Local).AddTicks(9990), "7673978319", new byte[] { 31, 48, 240, 67, 136, 12, 228, 16, 228, 156, 47, 142, 213, 57, 196, 3, 13, 164, 220, 6, 86, 142, 19, 21, 229, 56, 162, 40, 128, 34, 137, 187, 184, 186, 200, 41, 89, 208, 170, 87, 231, 87, 44, 222, 75, 229, 86, 34, 12, 50, 239, 43, 247, 108, 95, 42, 230, 30, 44, 176, 160, 170, 190, 54 }, "Customer", new byte[] { 76, 17, 5, 245, 149, 98, 220, 80, 19, 182, 238, 5, 1, 167, 18, 17, 63, 44, 3, 254, 62, 9, 127, 173, 248, 233, 145, 9, 238, 81, 78, 196, 178, 31, 176, 134, 214, 46, 235, 90, 34, 109, 104, 6, 73, 235, 19, 17, 41, 251, 151, 219, 26, 240, 13, 228, 37, 102, 132, 91, 69, 222, 181, 41, 84, 8, 1, 219, 71, 103, 119, 118, 148, 147, 222, 229, 254, 204, 222, 188, 226, 69, 13, 100, 253, 212, 121, 81, 88, 248, 77, 207, 152, 55, 134, 225, 177, 209, 100, 141, 182, 54, 148, 207, 17, 186, 67, 34, 124, 117, 236, 58, 253, 142, 167, 92, 106, 104, 57, 224, 52, 247, 164, 232, 77, 66, 126, 204 }, "507001" },
+                    { 102, "St Street opp lalbagh, chennai , TamilNadu", new DateTime(2024, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(2), "agent@gmail.com", "Agent", "Test", new DateTime(2024, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(3), "9999999999", new byte[] { 31, 48, 240, 67, 136, 12, 228, 16, 228, 156, 47, 142, 213, 57, 196, 3, 13, 164, 220, 6, 86, 142, 19, 21, 229, 56, 162, 40, 128, 34, 137, 187, 184, 186, 200, 41, 89, 208, 170, 87, 231, 87, 44, 222, 75, 229, 86, 34, 12, 50, 239, 43, 247, 108, 95, 42, 230, 30, 44, 176, 160, 170, 190, 54 }, "Agent", new byte[] { 76, 17, 5, 245, 149, 98, 220, 80, 19, 182, 238, 5, 1, 167, 18, 17, 63, 44, 3, 254, 62, 9, 127, 173, 248, 233, 145, 9, 238, 81, 78, 196, 178, 31, 176, 134, 214, 46, 235, 90, 34, 109, 104, 6, 73, 235, 19, 17, 41, 251, 151, 219, 26, 240, 13, 228, 37, 102, 132, 91, 69, 222, 181, 41, 84, 8, 1, 219, 71, 103, 119, 118, 148, 147, 222, 229, 254, 204, 222, 188, 226, 69, 13, 100, 253, 212, 121, 81, 88, 248, 77, 207, 152, 55, 134, 225, 177, 209, 100, 141, 182, 54, 148, 207, 17, 186, 67, 34, 124, 117, 236, 58, 253, 142, 167, 92, 106, 104, 57, 224, 52, 247, 164, 232, 77, 66, 126, 204 }, "507002" },
+                    { 103, "St Street opp lalbagh, chennai , TamilNadu", new DateTime(2024, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(13), "admin@gmail.com", "Admin", "Test", new DateTime(2024, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(14), "111111111", new byte[] { 31, 48, 240, 67, 136, 12, 228, 16, 228, 156, 47, 142, 213, 57, 196, 3, 13, 164, 220, 6, 86, 142, 19, 21, 229, 56, 162, 40, 128, 34, 137, 187, 184, 186, 200, 41, 89, 208, 170, 87, 231, 87, 44, 222, 75, 229, 86, 34, 12, 50, 239, 43, 247, 108, 95, 42, 230, 30, 44, 176, 160, 170, 190, 54 }, "Admin", new byte[] { 76, 17, 5, 245, 149, 98, 220, 80, 19, 182, 238, 5, 1, 167, 18, 17, 63, 44, 3, 254, 62, 9, 127, 173, 248, 233, 145, 9, 238, 81, 78, 196, 178, 31, 176, 134, 214, 46, 235, 90, 34, 109, 104, 6, 73, 235, 19, 17, 41, 251, 151, 219, 26, 240, 13, 228, 37, 102, 132, 91, 69, 222, 181, 41, 84, 8, 1, 219, 71, 103, 119, 118, 148, 147, 222, 229, 254, 204, 222, 188, 226, 69, 13, 100, 253, 212, 121, 81, 88, 248, 77, 207, 152, 55, 134, 225, 177, 209, 100, 141, 182, 54, 148, 207, 17, 186, 67, 34, 124, 117, 236, 58, 253, 142, 167, 92, 106, 104, 57, 224, 52, 247, 164, 232, 77, 66, 126, 204 }, "507003" }
                 });
 
             migrationBuilder.InsertData(
@@ -318,7 +332,7 @@ namespace Health_Insurance_Application.Migrations
             migrationBuilder.InsertData(
                 table: "Policies",
                 columns: new[] { "PolicyId", "CustomerId", "LastPaymentDate", "NextPaymentDueDate", "PaymentFrequency", "PolicyEndDate", "PolicyExpiryDate", "PolicyStartDate", "PremiumAmount", "QuoteAmount", "RenewalStatus", "SchemeId" },
-                values: new object[] { 1, 10001, new DateTime(2024, 7, 26, 10, 57, 20, 645, DateTimeKind.Local).AddTicks(2545), new DateTime(2025, 7, 26, 10, 57, 20, 645, DateTimeKind.Local).AddTicks(2545), "Quarterly", new DateTime(2025, 7, 26, 10, 57, 20, 645, DateTimeKind.Local).AddTicks(2540), new DateTime(2025, 7, 26, 10, 57, 20, 645, DateTimeKind.Local).AddTicks(2548), new DateTime(2024, 7, 26, 10, 57, 20, 645, DateTimeKind.Local).AddTicks(2539), 500f, 1000f, "Renwed", 1 });
+                values: new object[] { 1, 10001, new DateTime(2024, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(255), new DateTime(2025, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(256), "Quarterly", new DateTime(2025, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(251), new DateTime(2025, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(258), new DateTime(2024, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(250), 500f, 1000f, "Renwed", 1 });
 
             migrationBuilder.InsertData(
                 table: "Claims",
@@ -327,16 +341,16 @@ namespace Health_Insurance_Application.Migrations
 
             migrationBuilder.InsertData(
                 table: "Payments",
-                columns: new[] { "TransactionId", "CustomerId", "PaymentAmount", "PaymentDate", "PaymentStatus", "PolicyId", "Remarks" },
-                values: new object[] { 1, 10001, 500f, new DateTime(2024, 7, 26, 10, 57, 20, 645, DateTimeKind.Local).AddTicks(2684), "Completed", 1, "First payment of the year" });
+                columns: new[] { "Id", "CustomerId", "PaymentAmount", "PaymentDate", "PaymentDone", "PaymentDueDate", "PaymentStatus", "PolicyId", "Remarks", "TransactionId" },
+                values: new object[] { 10001, 10001, 500f, new DateTime(2024, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(355), false, false, "Completed", 1, "First payment of the year", 100001 });
 
             migrationBuilder.InsertData(
                 table: "Renewals",
                 columns: new[] { "RenewalId", "CustomerId", "DiscountApplied", "NewPaymentFrequency", "NewPolicyStartDate", "NewPremiumAmount", "PolicyId", "RenewalDate", "RenewalStatus" },
                 values: new object[,]
                 {
-                    { 1, 10001, 0f, "Anually", new DateTime(2025, 7, 26, 10, 57, 20, 645, DateTimeKind.Local).AddTicks(2698), 550f, 1, new DateTime(2024, 7, 26, 10, 57, 20, 645, DateTimeKind.Local).AddTicks(2697), "Pending" },
-                    { 2, 10001, 100f, "Quarterly", new DateTime(2026, 7, 26, 10, 57, 20, 645, DateTimeKind.Local).AddTicks(2700), 800f, 1, new DateTime(2025, 7, 26, 10, 57, 20, 645, DateTimeKind.Local).AddTicks(2700), "Renwed" }
+                    { 1, 10001, 0f, "Anually", new DateTime(2025, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(367), 550f, 1, new DateTime(2024, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(366), "Pending" },
+                    { 2, 10001, 100f, "Quarterly", new DateTime(2026, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(370), 800f, 1, new DateTime(2025, 7, 29, 16, 50, 55, 20, DateTimeKind.Local).AddTicks(369), "Renwed" }
                 });
 
             migrationBuilder.CreateIndex(

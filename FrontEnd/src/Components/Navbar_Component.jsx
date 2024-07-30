@@ -12,37 +12,58 @@ import {
 } from "@material-tailwind/react";
 import { useAuth } from '../Context/AuthManager';
 import Profile_Component from './Profile_Component';
+import { fetchRouteTitle } from '../Context/ScehmesManager';
+import { Link } from 'react-router-dom';
 
 
 const Navbar_Component = () => {
-  const [openNav, setOpenNav] = React.useState(false);
+  const [openNav, setOpenNav] = useState(false);
+  const [loading, setLoading] = useState(true)
+  const [schemeRoutes, setSchemeRoutes] = useState({});
   const {user} = useAuth()
-  console.log(user);
   const navList = (
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
-      <li
-        className="flex items-center gap-x-1 p-1"
-      >
-       <Dropdown_1/>
+    {!loading && schemeRoutes.individual && (
+      <li className="flex items-center gap-x-1 p-1">
+        <Dropdown menuItems={schemeRoutes.individual} title="Individual-Schemes"  type = "individual"/>
       </li>
-      <li
-        className="flex items-center gap-x-2 p-1"
-      >
-       <Dropdown_1/>
+    )}
+    {!loading && schemeRoutes.family && (
+      <li className="flex items-center gap-x-2 p-1">
+        <Dropdown menuItems={schemeRoutes.family} title="Family-Schemes" type = "family"  />
       </li>
-      <li
-        className="flex items-center gap-x-2 p-1"
-      >
-       <Dropdown_1/>
+    )}
+    {!loading && schemeRoutes.corporate && (
+      <li className="flex items-center gap-x-2 p-1">
+        <Dropdown menuItems={schemeRoutes.corporate} title="Corporate" type = "corporate" />
       </li>
-    </ul>
+    )}
+  </ul>
   );
+  const handleResize = () => {
+    if (window.innerWidth >= 960) {
+      setOpenNav(false);
+    }
+  };
  
   useEffect(() => {
-    window.addEventListener(
-      "resize",
-      () => window.innerWidth >= 960 && setOpenNav(false),
-    );
+    window.addEventListener('resize', handleResize);
+    const loadSchemes = async () => {
+      try {
+        setLoading(true); 
+        const fetchedData = await fetchRouteTitle("All");
+        console.log(fetchedData);
+        setSchemeRoutes(fetchedData);
+      } catch (err) {
+        alert(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadSchemes()
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
   return (
     <>
@@ -151,13 +172,8 @@ const Navbar_Component = () => {
 export default Navbar_Component
 
 
- const Dropdown_1 = () => {
-  const menuItems = [
-    "Individual Policy 1",
-    "Individual Policy 2",
-    "Individual Policy 3"
-  ];
-
+ const Dropdown = ({menuItems , title , type }) => {
+  if(menuItems == null) return;
   return (
     <Menu
       animate={{
@@ -168,20 +184,29 @@ export default Navbar_Component
     >
       <MenuHandler>
         <Typography variant='paragraph' as="a" href="#"  className='font-mono text-sm font-light flex items-center gap-x-1 p-1 text-black'>
-         <span> Individual Plan</span>
+         <span> {title} </span>
         <svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3 h-3" >
          <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
         </svg>
         </Typography>
       </MenuHandler>
       <MenuList>
+        <MenuItem> <Link to={`/scheme/${type}`}> All ({menuItems.length})</Link></MenuItem>
+        <div className='grid grid-cols-2'>
+
+        
         {
-          menuItems.map((item)=>{
+          menuItems.slice(0, 5).map((item)=>{
             return(
-              <MenuItem>{item}</MenuItem>
+              <div className='hover:underline '>
+                 <MenuItem key={item.schemeRoute}><Link to={`/scheme/${type}/${item.schemeRoute}`} >{item.schemeRoute}</Link></MenuItem>
+              </div>
+             
             )
           })
         }
+        </div>
+      
       </MenuList>
     </Menu>
   )

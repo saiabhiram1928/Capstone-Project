@@ -20,7 +20,6 @@ namespace Health_Insurance_Application.Models
         public string Remarks { get; set; }
         public float PaymentAmount { get; set; }   
         public bool PaymentDone { get; set; }
-
         public bool PaymentDueDate { get; set; }
     }
 }

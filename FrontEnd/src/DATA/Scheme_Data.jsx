@@ -1,11 +1,11 @@
 const SchemesData = {
     individual: {
-      title: "All Individual Plan",
+      title: "All Individual Plans",
       question: "Why Individual Health Plan?",
       answer: "As the name suggests, an individual plan is a type of medical insurance offering coverage, benefits, and security against medical emergencies to a single policyholder. An individual insurance policy acts as a personal safeguard against any expenses arising due to emergency hospitalization, accidents, or other ailments. As an individual, you can customize the benefits of an individual mediclaim policy while enjoying a pocket-friendly premium.",
       blockdata: [
         {
-          title: "People At Higher Risk",
+          title: "People At Higher Risks",
           description: "People who are susceptible to increased health risks owing to an unhealthy lifestyle and stressful occupations.",
           svg: (
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
