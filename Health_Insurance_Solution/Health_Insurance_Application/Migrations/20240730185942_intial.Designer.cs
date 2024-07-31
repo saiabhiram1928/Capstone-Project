@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Health_Insurance_Application.Migrations
 {
     [DbContext(typeof(HealthInsuranceContext))]
-    [Migration("20240729113757_seed-data")]
-    partial class seeddata
+    [Migration("20240730185942_intial")]
+    partial class intial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -283,7 +283,7 @@ namespace Health_Insurance_Application.Migrations
                             Id = 10001,
                             CustomerId = 10001,
                             PaymentAmount = 500f,
-                            PaymentDate = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8743),
+                            PaymentDate = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(838),
                             PaymentDone = false,
                             PaymentDueDate = false,
                             PaymentStatus = "Completed",
@@ -350,12 +350,12 @@ namespace Health_Insurance_Application.Migrations
                         {
                             PolicyId = 1,
                             CustomerId = 10001,
-                            LastPaymentDate = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8598),
-                            NextPaymentDueDate = new DateTime(2025, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8599),
+                            LastPaymentDate = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(753),
+                            NextPaymentDueDate = new DateTime(2025, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(754),
                             PaymentFrequency = "Quarterly",
-                            PolicyEndDate = new DateTime(2025, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8592),
-                            PolicyExpiryDate = new DateTime(2025, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8601),
-                            PolicyStartDate = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8591),
+                            PolicyEndDate = new DateTime(2025, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(749),
+                            PolicyExpiryDate = new DateTime(2025, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(756),
+                            PolicyStartDate = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(749),
                             PremiumAmount = 500f,
                             QuoteAmount = 1000f,
                             RenewalStatus = "Renwed",
@@ -412,10 +412,10 @@ namespace Health_Insurance_Application.Migrations
                             CustomerId = 10001,
                             DiscountApplied = 0f,
                             NewPaymentFrequency = "Anually",
-                            NewPolicyStartDate = new DateTime(2025, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8758),
+                            NewPolicyStartDate = new DateTime(2025, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(848),
                             NewPremiumAmount = 550f,
                             PolicyId = 1,
-                            RenewalDate = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8757),
+                            RenewalDate = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(847),
                             RenewalStatus = "Pending"
                         },
                         new
@@ -424,10 +424,10 @@ namespace Health_Insurance_Application.Migrations
                             CustomerId = 10001,
                             DiscountApplied = 100f,
                             NewPaymentFrequency = "Quarterly",
-                            NewPolicyStartDate = new DateTime(2026, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8760),
+                            NewPolicyStartDate = new DateTime(2026, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(851),
                             NewPremiumAmount = 800f,
                             PolicyId = 1,
-                            RenewalDate = new DateTime(2025, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8759),
+                            RenewalDate = new DateTime(2025, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(850),
                             RenewalStatus = "Renwed"
                         });
                 });
@@ -477,6 +477,10 @@ namespace Health_Insurance_Application.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SmallDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("SchemeId");
 
                     b.ToTable("Schemes");
@@ -492,10 +496,11 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 5,
                             RouteTitle = "individual-basic-plan",
                             SchemeDescription = "The Individual Basic Plan offers essential health coverage for individuals at an affordable premium. This plan includes coverage for hospitalization, surgery, and emergency care. It is designed for those seeking fundamental protection against medical expenses.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8615),
+                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(768),
                             SchemeName = "Individual Basic Plan",
                             SchemeStartedAt = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SchemeType = "Individual"
+                            SchemeType = "Individual",
+                            SmallDescription = "A Plan For Every Individual Which Covers Basic Need"
                         },
                         new
                         {
@@ -507,10 +512,11 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 7,
                             RouteTitle = "individual-premium-plan",
                             SchemeDescription = "The Individual Premium Plan provides extensive health coverage for individuals, including benefits for outpatient treatments, specialist consultations, and preventive care. This plan is ideal for those who want a higher level of health security and comprehensive medical benefits.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8617),
+                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(771),
                             SchemeName = "Individual Premium Plan",
                             SchemeStartedAt = new DateTime(2021, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SchemeType = "Individual"
+                            SchemeType = "Individual",
+                            SmallDescription = "A Plan For Every Person Which Covers the Needs"
                         },
                         new
                         {
@@ -522,10 +528,11 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 10,
                             RouteTitle = "individual-elite-plan",
                             SchemeDescription = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda voluptatem totam similique nobis dolore in, velit consectetur perspiciatis vero quas. Esse deleniti commodi perferendis officia saepe natus, quas dolor. Perspiciatis iusto nam optio quo natus amet velit explicabo quod, officia adipisci quia ipsum odio deleniti, fugiat esse illum tenetur obcaecati corporis quasi quibusdam dolorum laboriosam in. Numquam autem temporibus molestiae delectus sequi cupiditate suscipit natus facere enim dolorum sed eaque voluptas repellendus officiis et doloremque totam pariatur, quae, non amet explicabo. Maxime, magni! Ea voluptate aspernatur impedit vitae quasi necessitatibus. Ex, commodi quaerat. Dolor deleniti eos amet non. Optio minima quos incidunt recusandae eveniet, consequuntur earum quam nesciunt tenetur deserunt voluptas tempora ipsa omnis ipsam a iusto rerum, obcaecati aut nulla quo, blanditiis perferendis? Quam quo alias error possimus impedit sapiente commodi earum quaerat? Quas natus rem voluptate, at nostrum ut itaque voluptatibus porro velit labore consequatur obcaecati et nulla nihil cum, provident ratione iusto esse iure! Porro, totam cumque molestias officia minus vel molestiae, quod alias excepturi pariatur voluptates quae, cupiditate voluptatem fugit delectus. Ipsa temporibus similique odit veniam quo, cupiditate nesciunt dignissimos consequuntur aperiam, eveniet facilis recusandae voluptates nulla quaerat mollitia labore quae! Sapiente odio deserunt eum suscipit.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8618),
+                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(773),
                             SchemeName = "Individual Elite Plan",
                             SchemeStartedAt = new DateTime(2022, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SchemeType = "Individual"
+                            SchemeType = "Individual",
+                            SmallDescription = "A Plan for Every Individual for every need"
                         },
                         new
                         {
@@ -537,10 +544,11 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 5,
                             RouteTitle = "corporate-standard-plan",
                             SchemeDescription = "The Corporate Standard Plan offers essential health coverage for employees of small and medium-sized businesses. It includes hospitalization and emergency care benefits, providing basic protection to ensure the well-being of your workforce.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8620),
+                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(774),
                             SchemeName = "Corporate Standard Plan",
                             SchemeStartedAt = new DateTime(2019, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SchemeType = "Corporate"
+                            SchemeType = "Corporate",
+                            SmallDescription = "A Plan For Every Corporate Standard Covers basic need"
                         },
                         new
                         {
@@ -552,10 +560,11 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 7,
                             RouteTitle = "corporate-comprehensive-plan",
                             SchemeDescription = "The Corporate Comprehensive Plan provides extensive health coverage for employees, including benefits for outpatient treatments, preventive care, and specialist consultations. This plan is designed for businesses that want to offer their employees a higher level of health security and comprehensive medical benefits.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8624),
+                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(776),
                             SchemeName = "Corporate Comprehensive Plan",
                             SchemeStartedAt = new DateTime(2020, 8, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SchemeType = "Corporate"
+                            SchemeType = "Corporate",
+                            SmallDescription = "A Huge Amount Coverage For  Corporate with Higer number Of Employeess "
                         },
                         new
                         {
@@ -567,10 +576,11 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 10,
                             RouteTitle = "corporate-premium-plan",
                             SchemeDescription = "The Corporate Premium Plan offers the highest level of health coverage for corporate employees, including extensive inpatient and outpatient benefits, dental care, and access to a wide network of top healthcare providers. This plan is tailored for businesses that seek to provide the ultimate health protection and peace of mind for their employees.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8625),
+                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(777),
                             SchemeName = "Corporate Premium Plan",
                             SchemeStartedAt = new DateTime(2021, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SchemeType = "Corporate"
+                            SchemeType = "Corporate",
+                            SmallDescription = "Best Corporate Plan , with Highest Claim Sucess Rate"
                         },
                         new
                         {
@@ -582,10 +592,11 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 5,
                             RouteTitle = "family-basic-plan",
                             SchemeDescription = "The Family Basic Plan offers essential health coverage for families, including hospitalization and emergency care benefits. This plan is designed to provide fundamental protection for your family’s health needs at an affordable premium.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8626),
+                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(779),
                             SchemeName = "Family Basic Plan",
                             SchemeStartedAt = new DateTime(2018, 2, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SchemeType = "Family"
+                            SchemeType = "Family",
+                            SmallDescription = "The best plan with lowest Rate"
                         },
                         new
                         {
@@ -597,10 +608,11 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 7,
                             RouteTitle = "family-comprehensive-plan",
                             SchemeDescription = "The Family Comprehensive Plan provides extensive health coverage for families, including benefits for outpatient treatments, specialist consultations, and preventive care. This plan is ideal for families seeking a higher level of health security and comprehensive medical benefits.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8628),
+                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(780),
                             SchemeName = "Family Comprehensive Plan",
                             SchemeStartedAt = new DateTime(2019, 7, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SchemeType = "Family"
+                            SchemeType = "Family",
+                            SmallDescription = "Huge Amount Coverage which solves most of the needs"
                         },
                         new
                         {
@@ -612,10 +624,11 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 10,
                             RouteTitle = "family-elite-plan",
                             SchemeDescription = "The Family Elite Plan offers the highest level of health coverage for families, including extensive inpatient and outpatient benefits, dental care, and access to a wide network of top healthcare providers. This plan is tailored for families that seek the ultimate health protection and peace of mind.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8629),
+                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(781),
                             SchemeName = "Family Elite Plan",
                             SchemeStartedAt = new DateTime(2020, 10, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SchemeType = "Family"
+                            SchemeType = "Family",
+                            SmallDescription = "The best Plan To Take Care of your family from every danger"
                         });
                 });
 
@@ -678,45 +691,45 @@ namespace Health_Insurance_Application.Migrations
                         {
                             Uid = 101,
                             Address = "St Street opp lalbagh, chennai , TamilNadu",
-                            CreatedAt = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8401),
+                            CreatedAt = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(564),
                             Email = "customer1@gmail.com",
                             FirstName = "Customer",
                             LastName = "Test",
-                            LastUpdated = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8415),
+                            LastUpdated = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(574),
                             MobileNumber = "7673978319",
-                            Password = new byte[] { 29, 250, 211, 152, 167, 202, 58, 250, 123, 12, 150, 122, 138, 85, 245, 124, 130, 89, 118, 198, 189, 37, 121, 57, 5, 41, 60, 223, 177, 68, 2, 63, 250, 208, 70, 77, 2, 49, 181, 177, 118, 205, 57, 195, 70, 220, 80, 200, 155, 52, 113, 133, 74, 216, 19, 165, 86, 191, 87, 130, 79, 161, 213, 196 },
+                            Password = new byte[] { 206, 146, 211, 14, 171, 171, 255, 189, 127, 93, 110, 200, 34, 137, 251, 241, 30, 142, 137, 67, 213, 75, 26, 81, 190, 178, 214, 99, 50, 93, 196, 164, 155, 207, 219, 254, 118, 18, 200, 106, 220, 202, 164, 51, 137, 5, 40, 57, 117, 165, 87, 22, 244, 91, 158, 171, 62, 125, 171, 246, 96, 15, 97, 79 },
                             Role = "Customer",
-                            Salt = new byte[] { 78, 80, 54, 254, 99, 210, 167, 202, 242, 28, 222, 13, 110, 73, 28, 53, 222, 46, 40, 194, 244, 31, 55, 234, 68, 180, 190, 65, 250, 192, 59, 181, 86, 107, 60, 64, 81, 198, 141, 233, 94, 27, 112, 72, 214, 156, 205, 182, 70, 250, 219, 254, 72, 165, 48, 137, 156, 23, 26, 254, 140, 24, 39, 254, 68, 67, 185, 252, 47, 217, 91, 77, 149, 12, 89, 228, 227, 55, 73, 27, 97, 212, 215, 49, 224, 76, 130, 64, 106, 22, 87, 209, 121, 90, 194, 196, 233, 30, 113, 223, 42, 192, 59, 62, 49, 36, 93, 204, 159, 169, 142, 22, 221, 69, 91, 200, 146, 184, 157, 91, 57, 80, 125, 35, 3, 73, 127, 24 },
+                            Salt = new byte[] { 139, 124, 206, 211, 185, 67, 209, 97, 222, 203, 252, 167, 33, 178, 39, 151, 94, 15, 135, 56, 217, 154, 57, 20, 206, 97, 121, 43, 196, 186, 201, 86, 217, 190, 237, 2, 9, 1, 42, 16, 29, 51, 30, 23, 205, 222, 118, 78, 212, 37, 143, 231, 118, 75, 182, 242, 227, 172, 44, 95, 166, 21, 250, 62, 144, 135, 191, 165, 240, 62, 92, 14, 151, 227, 191, 136, 178, 13, 170, 201, 132, 78, 94, 22, 111, 77, 212, 200, 130, 33, 212, 5, 67, 95, 193, 2, 173, 87, 21, 122, 127, 67, 51, 183, 98, 167, 170, 28, 197, 74, 217, 73, 6, 70, 192, 59, 61, 15, 188, 65, 157, 236, 13, 212, 142, 110, 184, 118 },
                             Zipcode = "507001"
                         },
                         new
                         {
                             Uid = 102,
                             Address = "St Street opp lalbagh, chennai , TamilNadu",
-                            CreatedAt = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8428),
+                            CreatedAt = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(585),
                             Email = "agent@gmail.com",
                             FirstName = "Agent",
                             LastName = "Test",
-                            LastUpdated = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8429),
+                            LastUpdated = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(586),
                             MobileNumber = "9999999999",
-                            Password = new byte[] { 29, 250, 211, 152, 167, 202, 58, 250, 123, 12, 150, 122, 138, 85, 245, 124, 130, 89, 118, 198, 189, 37, 121, 57, 5, 41, 60, 223, 177, 68, 2, 63, 250, 208, 70, 77, 2, 49, 181, 177, 118, 205, 57, 195, 70, 220, 80, 200, 155, 52, 113, 133, 74, 216, 19, 165, 86, 191, 87, 130, 79, 161, 213, 196 },
+                            Password = new byte[] { 206, 146, 211, 14, 171, 171, 255, 189, 127, 93, 110, 200, 34, 137, 251, 241, 30, 142, 137, 67, 213, 75, 26, 81, 190, 178, 214, 99, 50, 93, 196, 164, 155, 207, 219, 254, 118, 18, 200, 106, 220, 202, 164, 51, 137, 5, 40, 57, 117, 165, 87, 22, 244, 91, 158, 171, 62, 125, 171, 246, 96, 15, 97, 79 },
                             Role = "Agent",
-                            Salt = new byte[] { 78, 80, 54, 254, 99, 210, 167, 202, 242, 28, 222, 13, 110, 73, 28, 53, 222, 46, 40, 194, 244, 31, 55, 234, 68, 180, 190, 65, 250, 192, 59, 181, 86, 107, 60, 64, 81, 198, 141, 233, 94, 27, 112, 72, 214, 156, 205, 182, 70, 250, 219, 254, 72, 165, 48, 137, 156, 23, 26, 254, 140, 24, 39, 254, 68, 67, 185, 252, 47, 217, 91, 77, 149, 12, 89, 228, 227, 55, 73, 27, 97, 212, 215, 49, 224, 76, 130, 64, 106, 22, 87, 209, 121, 90, 194, 196, 233, 30, 113, 223, 42, 192, 59, 62, 49, 36, 93, 204, 159, 169, 142, 22, 221, 69, 91, 200, 146, 184, 157, 91, 57, 80, 125, 35, 3, 73, 127, 24 },
+                            Salt = new byte[] { 139, 124, 206, 211, 185, 67, 209, 97, 222, 203, 252, 167, 33, 178, 39, 151, 94, 15, 135, 56, 217, 154, 57, 20, 206, 97, 121, 43, 196, 186, 201, 86, 217, 190, 237, 2, 9, 1, 42, 16, 29, 51, 30, 23, 205, 222, 118, 78, 212, 37, 143, 231, 118, 75, 182, 242, 227, 172, 44, 95, 166, 21, 250, 62, 144, 135, 191, 165, 240, 62, 92, 14, 151, 227, 191, 136, 178, 13, 170, 201, 132, 78, 94, 22, 111, 77, 212, 200, 130, 33, 212, 5, 67, 95, 193, 2, 173, 87, 21, 122, 127, 67, 51, 183, 98, 167, 170, 28, 197, 74, 217, 73, 6, 70, 192, 59, 61, 15, 188, 65, 157, 236, 13, 212, 142, 110, 184, 118 },
                             Zipcode = "507002"
                         },
                         new
                         {
                             Uid = 103,
                             Address = "St Street opp lalbagh, chennai , TamilNadu",
-                            CreatedAt = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8439),
+                            CreatedAt = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(597),
                             Email = "admin@gmail.com",
                             FirstName = "Admin",
                             LastName = "Test",
-                            LastUpdated = new DateTime(2024, 7, 29, 17, 7, 57, 192, DateTimeKind.Local).AddTicks(8440),
+                            LastUpdated = new DateTime(2024, 7, 31, 0, 29, 41, 861, DateTimeKind.Local).AddTicks(597),
                             MobileNumber = "111111111",
-                            Password = new byte[] { 29, 250, 211, 152, 167, 202, 58, 250, 123, 12, 150, 122, 138, 85, 245, 124, 130, 89, 118, 198, 189, 37, 121, 57, 5, 41, 60, 223, 177, 68, 2, 63, 250, 208, 70, 77, 2, 49, 181, 177, 118, 205, 57, 195, 70, 220, 80, 200, 155, 52, 113, 133, 74, 216, 19, 165, 86, 191, 87, 130, 79, 161, 213, 196 },
+                            Password = new byte[] { 206, 146, 211, 14, 171, 171, 255, 189, 127, 93, 110, 200, 34, 137, 251, 241, 30, 142, 137, 67, 213, 75, 26, 81, 190, 178, 214, 99, 50, 93, 196, 164, 155, 207, 219, 254, 118, 18, 200, 106, 220, 202, 164, 51, 137, 5, 40, 57, 117, 165, 87, 22, 244, 91, 158, 171, 62, 125, 171, 246, 96, 15, 97, 79 },
                             Role = "Admin",
-                            Salt = new byte[] { 78, 80, 54, 254, 99, 210, 167, 202, 242, 28, 222, 13, 110, 73, 28, 53, 222, 46, 40, 194, 244, 31, 55, 234, 68, 180, 190, 65, 250, 192, 59, 181, 86, 107, 60, 64, 81, 198, 141, 233, 94, 27, 112, 72, 214, 156, 205, 182, 70, 250, 219, 254, 72, 165, 48, 137, 156, 23, 26, 254, 140, 24, 39, 254, 68, 67, 185, 252, 47, 217, 91, 77, 149, 12, 89, 228, 227, 55, 73, 27, 97, 212, 215, 49, 224, 76, 130, 64, 106, 22, 87, 209, 121, 90, 194, 196, 233, 30, 113, 223, 42, 192, 59, 62, 49, 36, 93, 204, 159, 169, 142, 22, 221, 69, 91, 200, 146, 184, 157, 91, 57, 80, 125, 35, 3, 73, 127, 24 },
+                            Salt = new byte[] { 139, 124, 206, 211, 185, 67, 209, 97, 222, 203, 252, 167, 33, 178, 39, 151, 94, 15, 135, 56, 217, 154, 57, 20, 206, 97, 121, 43, 196, 186, 201, 86, 217, 190, 237, 2, 9, 1, 42, 16, 29, 51, 30, 23, 205, 222, 118, 78, 212, 37, 143, 231, 118, 75, 182, 242, 227, 172, 44, 95, 166, 21, 250, 62, 144, 135, 191, 165, 240, 62, 92, 14, 151, 227, 191, 136, 178, 13, 170, 201, 132, 78, 94, 22, 111, 77, 212, 200, 130, 33, 212, 5, 67, 95, 193, 2, 173, 87, 21, 122, 127, 67, 51, 183, 98, 167, 170, 28, 197, 74, 217, 73, 6, 70, 192, 59, 61, 15, 188, 65, 157, 236, 13, 212, 142, 110, 184, 118 },
                             Zipcode = "507003"
                         });
                 });

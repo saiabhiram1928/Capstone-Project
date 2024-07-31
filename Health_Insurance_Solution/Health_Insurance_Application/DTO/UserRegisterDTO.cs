@@ -29,7 +29,6 @@ namespace Health_Insurance_Application.DTO
         [Phone]
         public string EmergenceyContact { get; set; } =string.Empty;
         public int HosiptalId { get; set; }
-        [Phone]
         public string AgentContact { get; set; }  = string.Empty;   
 
     }

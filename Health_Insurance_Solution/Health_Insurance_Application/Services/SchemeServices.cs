@@ -36,16 +36,21 @@ namespace Health_Insurance_Application.Services
                 BaseCoverageAmount = scheme.BaseCoverageAmount,
                 PaymentFrequency = paymentFrequency,
                 Premium = premium,
-                PaymentTerm = scheme.PaymentTerm
+                PaymentTerm = scheme.PaymentTerm,
+                CalCoverageYears = scheme.CoverageYears,
             };
             return premiumDTO;
         }
         public async Task<PremiumReturnDTO> CalculatePremiumWithQuote(string paymentFrequency, int schemeId, float quoteCoverageAmount, int quotePaymentTerm)
         {
             var scheme = await _schemeRepo.GetById(schemeId);
-            if(quoteCoverageAmount < scheme.BaseCoverageAmount)
+            if(quoteCoverageAmount < scheme.BaseCoverageAmount || quoteCoverageAmount > scheme.CoverageAmount)
             {
                 throw new NotSupportedException("Quote Amount Cant be lower than Base Coverage Amount");
+            }
+            if(quotePaymentTerm > scheme.PaymentTerm || quotePaymentTerm <=0)
+            {
+                throw new NotSupportedException($"Quoted Payment Term Cant greater than {scheme.PaymentTerm}");
             }
             float adjustmentFactor = (float)quoteCoverageAmount / scheme.BaseCoverageAmount;
             float adjustedYearlyPremium = scheme.BasePremiumAmount * adjustmentFactor;
@@ -84,6 +89,11 @@ namespace Health_Insurance_Application.Services
         public async Task<Scheme> GetSchemeById(int schemeId)
         {
             var scheme = await _schemeRepo.GetById(schemeId);
+            return scheme;
+        }
+        public async Task<Scheme> GetByRouteTitle(string routeTitle)
+        {
+            var scheme =await _schemeRepo.GetByRouteTitle(routeTitle);
             return scheme;
         }
 

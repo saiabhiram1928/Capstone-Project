@@ -75,11 +75,6 @@ namespace Health_Insurance_Application.Repositories
                 Console.WriteLine($"Database error: {dbEx.Message}");
                 throw; 
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                throw;
-            }
         }
 
         public async Task<T> GetById(K key)
@@ -98,11 +93,6 @@ namespace Health_Insurance_Application.Repositories
             catch (DbException dbEx)
             {
                 Console.WriteLine($"Database error: {dbEx.Message}");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
                 throw;
             }
         }

@@ -1,8 +1,12 @@
 import { Button, Drawer, Input, Tooltip, Typography, Select, Option } from '@material-tailwind/react';
 import React, { useState } from 'react';
 import Navbar_Component from '../Components/Navbar_Component';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../Context/AuthAndStateManager';
 
 const Register_Page = () => {
+  const {handlerUserRegister} = useAuth()
+  const navigate = useNavigate()
   const [openDrawer, setOpenDrawer] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -58,10 +62,16 @@ const Register_Page = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =  async(e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log('Form data submitted:', formData);
+      try{
+        const res = await handlerUserRegister(formData)
+        alert("User Created Sucessfully")
+        window.location.href = '/'
+      }catch(ex){
+        alert(ex)
+      }       
     }
   };
 
@@ -70,12 +80,12 @@ const Register_Page = () => {
       <div className="text-center mb-10">
         <div className='flex items-center justify-center bg-gray-20'>
           <Tooltip>
-            <Button onClick={handleOpenDrawer} size='md' className='text-3xl' variant="text">CARE</Button>
+            <Button onClick={handleOpenDrawer} size='md' className='text-3xl' variant="outlined">CARE</Button>
           </Tooltip>
           <Drawer size={60} placement="top" open={openDrawer} className='grid grid-cols-3 bg-[#FFF8DC]' onClose={handleCloseDrawer}>
-            <div className='py-3'>Home-Page</div>
-            <div className='py-3 cursor-pointer'>Login-Page</div>
-            <div className='py-3 cursor-pointer'>Get a Call From Agent</div>
+            <div className='py-3 underline cursor-pointer'><Link to="/" >Home</Link> </div>
+            <div className='py-3 underline cursor-pointer'><Link to="/login">Login</Link> </div>
+            <div className='py-3 underline cursor-pointer'><Link to = "/login">Get a Call From Agent</Link> </div>
           </Drawer>
         </div>
         <Typography variant='paragraph' className='font-mono'>Register</Typography>

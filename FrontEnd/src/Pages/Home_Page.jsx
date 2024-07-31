@@ -5,7 +5,8 @@ import {
   } from "@material-tailwind/react";
 import Premium_Calculator_Comp from '../Components/Premium_Calculator_Comp';
 import KPICard_Component from '../Components/KPICard_Component';
-
+import Hero_Section_Image from '../Assets/Hero_Section_Image.png';
+import Hero_Section_Image_2 from '../Assets/Hero_Section_Image_2.png';
 const Kpi_data = [
   {
     title: "Total Claim",
@@ -61,7 +62,7 @@ const Home_Page = () => {
     </div>
 
     <div class="lg:w-1/3 md:w-1/2 w-5/6 ">
-    <Premium_Calculator_Comp/>
+    <img src={Hero_Section_Image_2} className='bg-inherit'/>
     </div>
     
   </div>

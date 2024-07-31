@@ -10,30 +10,28 @@ import {
   MenuList,
   MenuItem,
 } from "@material-tailwind/react";
-import { useAuth } from '../Context/AuthManager';
+import { useAuth } from '../Context/AuthAndStateManager.jsx';
 import Profile_Component from './Profile_Component';
-import { fetchRouteTitle } from '../Context/ScehmesManager';
 import { Link } from 'react-router-dom';
 
 
 const Navbar_Component = () => {
   const [openNav, setOpenNav] = useState(false);
-  const [loading, setLoading] = useState(true)
   const [schemeRoutes, setSchemeRoutes] = useState({});
-  const {user} = useAuth()
+  const {user,role , handleLogout} = useAuth()
   const navList = (
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
-    {!loading && schemeRoutes.individual && (
+    {schemeRoutes.individual && (
       <li className="flex items-center gap-x-1 p-1">
         <Dropdown menuItems={schemeRoutes.individual} title="Individual-Schemes"  type = "individual"/>
       </li>
     )}
-    {!loading && schemeRoutes.family && (
+    {schemeRoutes.family && (
       <li className="flex items-center gap-x-2 p-1">
         <Dropdown menuItems={schemeRoutes.family} title="Family-Schemes" type = "family"  />
       </li>
     )}
-    {!loading && schemeRoutes.corporate && (
+    { schemeRoutes.corporate && (
       <li className="flex items-center gap-x-2 p-1">
         <Dropdown menuItems={schemeRoutes.corporate} title="Corporate" type = "corporate" />
       </li>
@@ -45,22 +43,16 @@ const Navbar_Component = () => {
       setOpenNav(false);
     }
   };
- 
+  const loadSchemes =  () => {
+    const routes = JSON.parse(sessionStorage.getItem('schemesRoute'));
+    if (routes) {
+      setSchemeRoutes(routes);
+    }
+  };
+
   useEffect(() => {
     window.addEventListener('resize', handleResize);
-    const loadSchemes = async () => {
-      try {
-        setLoading(true); 
-        const fetchedData = await fetchRouteTitle("All");
-        console.log(fetchedData);
-        setSchemeRoutes(fetchedData);
-      } catch (err) {
-        alert(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadSchemes()
+    loadSchemes();
     return () => {
       window.removeEventListener('resize', handleResize);
     };
@@ -83,16 +75,9 @@ const Navbar_Component = () => {
         <div className="flex items-center gap-x-1">
           {
             !user  ? (<>
-              <Button variant="text" size="sm" className="hidden lg:inline-block">
-            <span>Log In</span>
-          </Button>
-          <Button
-            variant="gradient"
-            size="sm"
-            className="hidden lg:inline-block"
-          >
-            <span>Sign in</span>
-          </Button>
+              <Button  size="lg" className="hidden lg:inline-block ">
+               <Link to="/login"> Login </Link>
+              </Button>
             </>) : (<div className='lg:block hidden '><Profile_Component/></div>)
           }
         
@@ -141,18 +126,15 @@ const Navbar_Component = () => {
           <div className="flex items-center gap-x-1">
             {
               !user ? (<>
-                <Button fullWidth variant="text" size="sm" className="">
-              <span>Log In</span>
-            </Button>
-            <Button fullWidth variant="gradient" size="sm" className="">
-              <span>Sign in</span>
+            <Button fullWidth variant="text" size="sm" className="">
+               Log In
             </Button>
               </>) :(
                 <>
-                   <Button fullWidth variant="text" size="sm" className="">
-              <span>My Profile</span>
+            <Button fullWidth variant="text" size="sm" className="">
+              <span><Link to="/portal">{role} Portal </Link> </span>
             </Button>
-            <Button fullWidth variant="gradient" size="sm" className="">
+            <Button onClick={handleLogout} fullWidth variant="gradient" size="sm" className="">
               <span>Logout</span>
             </Button>
                 </>
@@ -193,13 +175,11 @@ export default Navbar_Component
       <MenuList>
         <MenuItem> <Link to={`/scheme/${type}`}> All ({menuItems.length})</Link></MenuItem>
         <div className='grid grid-cols-2'>
-
-        
         {
-          menuItems.slice(0, 5).map((item)=>{
+          menuItems.slice(0, 5).map((item , index)=>{
             return(
               <div className='hover:underline '>
-                 <MenuItem key={item.schemeRoute}><Link to={`/scheme/${type}/${item.schemeRoute}`} >{item.schemeRoute}</Link></MenuItem>
+                 <MenuItem key={index}><Link to={`/scheme/${type}/${item.schemeRoute}`} >{item.schemeRoute}</Link></MenuItem>
               </div>
              
             )

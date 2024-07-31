@@ -1,16 +1,21 @@
 import { Typography , Input, Button } from '@material-tailwind/react'
 import React , {useState , useEffect} from 'react'
 import LoginPage_Asset from '../Assets/Login_Page_Asset.png';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../Context/AuthAndStateManager';
 
 
 const Login_Page = () => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const {handleUserLogin} = useAuth()
+  const navigate = useNavigate()
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^\+?[1-9]\d{1,14}$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 const [emailOrPhone, setEmailOrPhone] = useState('');
 const [password, setPassword] = useState('');
 const [errors, setErrors] = useState({ emailOrPhone: '', password: '' });
 const [isFormValid, setIsFormValid] = useState(false);
+const [loading , setLoading] = useState(false)
   const handleEmailOrPhoneNumber = (e)=>{
     const value = e.target.value;
     setEmailOrPhone(value);
@@ -46,6 +51,24 @@ const [isFormValid, setIsFormValid] = useState(false);
     const isPasswordValid = passwordRegex.test(password);
     setIsFormValid(isEmailOrPhoneValid && isPasswordValid);
 }, [emailOrPhone, password]);
+const handleSubmit =  async (e)=>{
+  e.preventDefault()
+  if(isFormValid){
+     try{
+      setLoading(true)
+      setIsFormValid(false)
+      const data = await handleUserLogin({emailOrPhone, password});
+       alert("Sucesfully Logged in")
+       window.location.href = '/'
+     }catch(err){
+      alert(err)
+     }finally{
+      setIsFormValid(true)
+      setLoading(false)
+     }
+     
+  }
+}
   return (
     <div className="flex h-screen font-mono">
     {/* <!-- Left Pane --> */}
@@ -58,7 +81,7 @@ const [isFormValid, setIsFormValid] = useState(false);
     <div className="w-full bg-gray-100 lg:w-1/2 flex items-center justify-center">
       <div className="max-w-md w-full p-6">
         <Typography variant = 'h2' className="font-bold font-mono mb-6 text-center">Login</Typography>
-        <form  className="space-y-4">
+        <form onSubmit={handleSubmit}  className="space-y-4">
           <div>
           <Input className='font-mono' type="text" value={emailOrPhone} onChange={handleEmailOrPhoneNumber} label="Email Or Phone" placeholder="Enter Your Email Or Phone Number"/>
           {errors.emailOrPhone && <Typography variant='paragraph' className="text-red-800 text-sm mt-2">  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-4 inline mr-1">
@@ -73,11 +96,11 @@ const [isFormValid, setIsFormValid] = useState(false);
 </svg><span>{errors.password} </span> </Typography>}
           </div>
           <div>
-            <Button type="submit"  disabled = {!isFormValid} fullWidth>Sign Up</Button>
+            <Button type="submit" loading={loading} disabled = {!isFormValid} fullWidth>Sign Up</Button>
           </div>
         </form>
         <div className="mt-4 text-sm text-gray-600 text-center">
-          <p>Already have an account? <a href="#" className="text-black hover:underline">Login here</a>
+          <p>Dont&apos;t Have a Account? <Link to='/register' className="text-black hover:underline">Register</Link>
           </p>
         </div>
       </div>

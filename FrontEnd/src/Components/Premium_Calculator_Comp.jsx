@@ -1,125 +1,242 @@
-import React , {useState} from 'react'
+import React, { useState, useEffect } from 'react';
 import {
-    Button,
-    Typography,
-    Input,
-    Card,
-    CardBody,
-    CardFooter,
-    Checkbox,
-    Select,
-    Radio,
-   
-  } from "@material-tailwind/react";
-import { SchemeData } from '../DATA/Scheme_Data';
+  Button,
+  Typography,
+  Input,
+  Card,
+  CardBody,
+  CardFooter,
+  Radio,
+  Select,
+  Option,
+} from "@material-tailwind/react";
+import { calulatePremium } from '../Context/ScehmesManager';
 
-const Premium_Calculator_Comp = () => {
-  const schemeData = SchemeData;
- 
-    const allSchemes = [
-      ...schemeData.individual,
-      ...schemeData.corporate,
-      ...schemeData.family
-    ];    
-    const [selectedSchemeId, setSelectedSchemeId] = useState(allSchemes[0].schemeId);
-    const [optionType, setOptionType] = useState(null);
-    const [coverageAmount, setCoverageAmount] = useState('');
-    const [paymentTerm, setPaymentTerm] = useState('');
-  
-    const selectedScheme = allSchemes.find(scheme => scheme.schemeId === selectedSchemeId);
-  
-    const handleSchemeChange = (event) => {
-      setSelectedSchemeId(Number(event.target.value));
-    };
-  
-    const handleOptionChange = (event) => {
-      setOptionType(event.target.value);
-      if (event.target.value === 'normal') {
-      
-        setCoverageAmount(selectedScheme?.coverageAmount || '');
-        setPaymentTerm(selectedScheme?.paymentTerm || '');
+const Premium_Calculator_Comp = ({ data }) => {
+  const [optionType, setOptionType] = useState(null);
+  const [coverageAmount, setCoverageAmount] = useState('');
+  const [paymentTerm, setPaymentTerm] = useState('');
+  const [paymentFreq, setPaymentFreq] = useState("Monthly");
+  const [resData, setResData] = useState(null)
+  const [loading, setloading] = useState(false)
+  const [errors, setErrors] = useState({
+    coverageAmountError: '',
+    paymentTermError: '',
+  });
+  const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
+
+  const handleOptionChange = (event) => {
+    setOptionType(event.target.value);
+    if (event.target.value === 'normal') {
+      setCoverageAmount(data.coverageAmount || '');
+      setPaymentTerm(data.paymentTerm || '');
+    } else {
+      setCoverageAmount('');
+      setPaymentTerm('');
+      setResData(null)
+    }
+  };
+
+  const handleCoverageAmountChange = (event) => {
+    const value = event.target.value;
+    // Allow empty input or valid floating point numbers
+    if (/^\d*\.?\d*$/.test(value)) {
+      setCoverageAmount(value)
+    } else {
+      setCoverageAmount('');
+    }
+  };
+
+  const handlePaymentTermChange = (event) => {
+    const value = event.target.value;
+    // Allow empty input or valid integers
+    if (/^\d*$/.test(value)) {
+      setPaymentTerm(value);
+    } else {
+      setPaymentTerm('');
+    }
+  };
+
+  const validateFields = () => {
+    let valid = true;
+    let coverageAmountError = '';
+    let paymentTermError = '';
+
+    if (optionType === 'quote') {
+      if (coverageAmount && parseFloat(coverageAmount) < data.baseCoverageAmount) {
+        coverageAmountError = `Quoted amount must be at least ${data.baseCoverageAmount}`;
+        valid = false;
       }
-    };
+      if (paymentTerm && parseInt(paymentTerm) >= data.paymentTerm) {
+        paymentTermError = `Quoted payment term must be less than ${data.paymentTerm}`;
+        valid = false;
+      }
+      if (coverageAmount && parseFloat(coverageAmount) > data.coverageAmount) {
+        coverageAmountError = `Quoted Exceed Max Coverage Amount ${data.coverageAmount}, Check Other Plan`;
+        valid = false;
+      }
+      if (paymentTerm && parseInt(paymentTerm) <= 0) {
+        paymentTermError = `Enter a Valid Payment Term`;
+        valid = false;
+      }
+    }
+
+    setErrors({
+      coverageAmountError,
+      paymentTermError,
+    });
+
+    setIsSubmitEnabled(valid);
+  };
+
+  useEffect(() => {
+    validateFields();
+  }, [coverageAmount, paymentTerm, optionType]);
+
+  const handleSubmit = async () => {
+    if (isSubmitEnabled) {
+      try {
+        setloading(true)
+        const res = await calulatePremium(data.schemeId, optionType, paymentFreq, paymentTerm, parseFloat(coverageAmount));
+        console.log(res);
+        setResData(res)
+      } catch (ex) {
+        alert(ex);
+      }finally{
+        setloading(false)
+      }
+    }
+  };
+
   return (
-   <>
-   <Card>
-      <Typography variant='h5' className='flex items-center justify-center mt-5 py-5 bg-[#FFF5EE]'>Premium Calculator </Typography>
-      <CardBody className="flex flex-col gap-4">
-        <div className='relative h-12 w-full' >
-        <select className='peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50' 
-        onChange={handleSchemeChange}
-        value={selectedSchemeId}
-        >
-        {allSchemes.map((item) => (
-          <option key={item.schemeId} value={item.schemeId} className="flex items-center gap-2 opacity-100 px-5 py-10 pointer-events-none">
-            {item.routeTitle}
-          </option>
-        ))}
-      </select>
-      <label
-    class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-    Select Scheme
-  </label>
-        </div>
-        <div className='flex gap-4'>
-              <Radio label = "Normal"
-                checked={optionType === 'normal'}
-                onChange={handleOptionChange}
-                color='blue'
-                value="normal"
-              />
-              <Radio
-                label = "Quote"
-                value="quote"
-                checked={optionType === 'quote'}
-                onChange={handleOptionChange}
-                color='red'
-              />
+    <>
+      <Card>
+        <Typography variant='h5' className='flex items-center justify-center mt-5 py-5 bg-[#FFF5EE]'>Premium Calculator</Typography>
+        <CardBody className="flex flex-col gap-4">
+          <div className='relative h-12 w-full'>
+            <Input label='Scheme' value={data.routeTitle} disabled />
+          </div>
+          <div className='flex gap-4'>
+            <Radio
+              label="Normal"
+              checked={optionType === 'normal'}
+              onChange={handleOptionChange}
+              color='blue'
+              value="normal"
+            />
+            <Radio
+              label="Quote"
+              value="quote"
+              checked={optionType === 'quote'}
+              onChange={handleOptionChange}
+              color='red'
+            />
           </div>
           {optionType && (
             <div className='flex flex-col gap-4'>
               <div className='flex flex-col gap-3'>
-                { optionType == 'normal' && <Typography variant='small'>Coverage Amount</Typography>}
+                {optionType === 'normal' && <Typography variant='small'>Coverage Amount</Typography>}
                 <Input
-                label={optionType == 'normal' ? "Coverage Amount" : "Enter your Quote Amount"}
+                  label={optionType === 'normal' ? "Coverage Amount" : "Enter your Quote Amount"}
                   type="text"
                   disabled={optionType === 'normal'}
-                  value={optionType === 'normal' ? selectedScheme?.coverageAmount : coverageAmount}
-                  onChange={(e) => setCoverageAmount(e.target.value)}
+                  value={coverageAmount}
+                  onChange={handleCoverageAmountChange}
                 />
+                {errors.coverageAmountError && (
+                  <Typography
+                    variant="small"
+                    color="gray"
+                    className="mt-2 flex items-center gap-1 font-normal"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="-mt-px h-4 w-4"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    {errors.coverageAmountError}
+                  </Typography>
+                )}
               </div>
               <div className='flex flex-col gap-3'>
-                {optionType=='normal' && <Typography variant='small'>Payment Term (Years)</Typography>}
+                {optionType === 'normal' && <Typography variant='small'>Payment Term (Years)</Typography>}
                 <Input
                   type="text"
+                  label={optionType === 'normal' ? "Payment Term" : "Enter your Payment Term"}
                   disabled={optionType === 'normal'}
-                  value={optionType === 'normal' ? selectedScheme?.paymentTerm : paymentTerm}
-                  onChange={(e) => setPaymentTerm(e.target.value)}
+                  value={paymentTerm}
+                  onChange={handlePaymentTermChange}
                 />
+                {errors.paymentTermError && (
+                  <Typography
+                    variant="small"
+                    color="gray"
+                    className="mt-2 flex items-center gap-1 font-normal"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="-mt-px h-4 w-4"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    {errors.paymentTermError}
+                  </Typography>
+                )}
+              </div>
+              <div className='flex flex-col gap-3'>
+                <Select
+                  label="Select Payment Frequency"
+                  animate={{
+                    mount: { y: 0 },
+                    unmount: { y: 25 },
+                  }}
+                  onChange={(value) => setPaymentFreq(value)}
+                  value={paymentFreq}
+                >
+                  <Option value="Monthly">Monthly</Option>
+                  <Option value="Quarterly">Quarterly</Option>
+                  <Option value="Annually">Annually</Option>
+                </Select>
               </div>
             </div>
           )}
-      </CardBody>
-      <CardFooter className="pt-0">
-        <Button variant="gradient" fullWidth>
-          Sign In
-        </Button>
-        <Typography variant="small" className="mt-6 flex justify-center">
-          Don&apos;t have an account?
-          <Typography
-            as="a"
-            href="#signup"
-            variant="small"
-            color="blue-gray"
-            className="ml-1 font-bold"
-          >
-            Sign up
-          </Typography>
-        </Typography>
-      </CardFooter>
-    </Card>
-   </>
-  )
-}
+        </CardBody>
+        <CardFooter className="pt-0">
+          <Button onClick={handleSubmit} variant="gradient" fullWidth disabled={!isSubmitEnabled} loading={loading}>
+            Calculate Premium
+          </Button>
+          
+            {
+              resData && (
+                <>
+                 <Typography variant="small" className="flex my-3 font-mono">
+                  Premium for {resData.paymentFrequency} = Rs {resData.premium}
+                 </Typography>
+                <Typography variant="small" className="flex my-3 font-mono text-cyan-800">
+                 Coverage Term (in years) for Payment Term of {resData.paymentTerm
+                 } (in years) excluding Payment Term = {resData.calCoverageYears} Years
+                 </Typography>
+                </>
+               
+              )
+            }
+        </CardFooter>
+      </Card>
+    </>
+  );
+};
 
-export default Premium_Calculator_Comp
+export default Premium_Calculator_Comp;

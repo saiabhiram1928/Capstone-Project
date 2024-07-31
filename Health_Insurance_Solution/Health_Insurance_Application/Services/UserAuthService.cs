@@ -50,7 +50,7 @@ namespace Health_Insurance_Application.Services
             var check = await _userRepo.CheckUserExist(registerDTO.Email, registerDTO.MobileNumber);
             if (check)
             {
-                throw new DuplicateItemException("User already exists, please try to login.");
+                throw new DuplicateItemException("User already exists with given phone Number or Email, please try to login.");
             }
 
             var (passwd, salt) = _hashService.HashPasswd(registerDTO.Password);

@@ -35,10 +35,10 @@ namespace Health_Insurance_Application.Controllers
             }
             catch (DuplicateItemException ex)
             {
-                return Conflict(new ErrorDTO() { Code = 409 , Message =ex.Message });
+                return Conflict(new ErrorDTO(409, ex.Message));
             }catch(DbException ex)
             {
-                return StatusCode(500, new ErrorDTO() { Code = 500, Message = "A database error occurred. Please try again." });
+                return StatusCode(500, new ErrorDTO(500, "A database error occurred. Please try again."));
             }
             catch (Exception ex)
             {
@@ -62,10 +62,10 @@ namespace Health_Insurance_Application.Controllers
             }
             catch (DuplicateItemException ex)
             {
-                return Conflict(new ErrorDTO() { Code = 409 , Message =ex.Message });
+                return Conflict(new ErrorDTO(409, ex.Message));
             }catch(DbException ex)
             {
-                return StatusCode(500, new ErrorDTO() { Code = 500, Message = "A database error occurred. Please try again." });
+                return StatusCode(500, new ErrorDTO(500, "A database error occurred. Please try again."));
             }
             catch (Exception ex)
             {
@@ -85,14 +85,16 @@ namespace Health_Insurance_Application.Controllers
             {
                 var result = await _userAuthService.Login(userLoginDTO);
                 return Ok(result);
-            }
-            catch (DuplicateItemException ex)
+            }catch(UnauthorizedAccessException ex)
             {
-                return Conflict(new ErrorDTO() { Code = 409, Message = ex.Message });
+                return Unauthorized(new ErrorDTO(401,ex.Message));
+            }catch(NoSuchItemInDbException ex)
+            {
+                return NotFound(new ErrorDTO(404, ex.Message));
             }
             catch (DbException ex)
             {
-                return StatusCode(500, new ErrorDTO() { Code = 500, Message = "A database error occurred. Please try again." });
+                return StatusCode(500, new ErrorDTO(500, "A database error occurred. Please try again."));
             }
             catch (Exception ex)
             {

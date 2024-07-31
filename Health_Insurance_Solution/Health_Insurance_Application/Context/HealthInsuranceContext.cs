@@ -43,7 +43,7 @@ namespace Health_Insurance_Application.Context
                         Role = RoleEnum.Customer,
                         Address = "St Street opp lalbagh, chennai , TamilNadu",
                         Zipcode = "507001",
-                        MobileNumber = "7673978319",
+                        MobileNumber = "9999999991",
                         CreatedAt = DateTime.Now,
                         LastUpdated = DateTime.Now
                     },

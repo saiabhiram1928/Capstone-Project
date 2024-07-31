@@ -1,33 +1,45 @@
-import { Button, Typography } from '@material-tailwind/react'
-import React from 'react'
+import { Button, typography, Typography } from '@material-tailwind/react'
+import React, { useEffect , useState } from 'react'
 import Premium_Calculator_Comp from '../Components/Premium_Calculator_Comp'
-import { Navigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { SchemeData } from '../DATA/Scheme_Data'
+import { fetchSchemeByRoute } from '../Context/ScehmesManager'
+import { useAuth } from '../Context/AuthAndStateManager'
+import Loader_Component from '../Components/Loader_Component'
 
 const Scheme_Page = () => {
   const { name } = useParams(); 
-  const findScheme = (data) => {
-    for (const key in data) {
-      const scheme = data[key].find(scheme => scheme.routeTitle === name);
-      if (scheme) return scheme;
-    }
-    return null;
-  }
+  const [scheme, setScheme] = useState({})
+  const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
   const trimDescription = (description, wordLimit) => {
     const words = description.split(' ');
     if (words.length <= wordLimit) return description;
 
     return words.slice(0, wordLimit).join(' ') + '...';
   }
-  const scheme = findScheme(SchemeData);
-  if(!scheme) <Navigate to = "/404-NotFound" />
+  useEffect(()=>{
+    const fetchData = async () => {
+      try {
+        const data = await fetchSchemeByRoute(name);
+        setScheme(data);
+      } catch (err) {
+        alert(err)
+        navigate('/')
+      }
+    };
+    fetchData().then(()=> setLoading(false))
+    window.scrollTo(0, 0);
+  },[name])
+
+   if(loading) return <><h1>Loading....</h1></>
   return (
     <>
-     <section class="text-gray-600 body-font bg-[#F5F5F5] font-mono">
+    <section class="text-gray-600 body-font bg-[#F5F5F5] font-mono">
      <div class="container mx-auto flex md:px-11 px-2 py-20 md:flex-row flex-col items-center">
   {/* <!-- Premium Calculator Component (shown first on smaller screens) --> */}
   <div class="lg:w-1/3 md:w-1/2 w-5/6 order-1 md:order-2 mb-10 md:mb-0">
-    <Premium_Calculator_Comp />
+    <Premium_Calculator_Comp data={scheme} />
   </div>
   
   {/* <!-- Description Section (shown after Premium Calculator on smaller screens) --> */}
@@ -63,7 +75,7 @@ const Scheme_Page = () => {
         </tr>
          <tr>
          <td class="border-2 border-black text-start  p-3">Base Coverage Amount</td>
-         <td class="border-2 border-black text-center p-3">Rs.{scheme.coverageAmount/100000} Lakhs</td>
+         <td class="border-2 border-black text-center p-3">Rs.{scheme.baseCoverageAmount/100000} Lakhs</td>
          </tr>
          <tr>
          <td class="border-2 border-black text-start  p-3">Base Premium Amount</td>

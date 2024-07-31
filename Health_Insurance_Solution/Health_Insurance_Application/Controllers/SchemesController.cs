@@ -19,7 +19,8 @@ namespace Health_Insurance_Application.Controllers
             _schemeService = schemeServices;
         }
 
-        [HttpGet("CalPremium")]
+
+        [HttpPost("CalPremium")]
 
         public async Task<IActionResult> Login([FromBody] PremiumCalDTO premiumCalDTO , [FromQuery] string payload )
         {
@@ -29,48 +30,47 @@ namespace Health_Insurance_Application.Controllers
             }
             if(payload == null)
             {
-                return BadRequest(new ErrorDTO() { Code = 409, Message = "Payload Cant be Empty" });
+                return BadRequest(new ErrorDTO(409, "Payload Cant be Empty"));
             }
             try
             {
-                if (payload == "Normal")
+                if (payload == "normal")
                 {
                     var res = await _schemeService.CalculatePremiumForTotal(premiumCalDTO.PaymentFrequency, premiumCalDTO.SchemeId);
                     return Ok(res);
-                } else if (payload == "Quoted")
+                } else if (payload == "quote")
                 {
                     var res = await _schemeService.CalculatePremiumWithQuote(premiumCalDTO.PaymentFrequency, premiumCalDTO.SchemeId, premiumCalDTO.QuotedCoverageAmount, premiumCalDTO.QuotedPaymentTerm);
+                    return Ok(res);
                 }
-                return BadRequest(new ErrorDTO() { Code = 400, Message = "Please Check Premium Type" });
+                return BadRequest(new ErrorDTO(400, "Please Check payload Type"));
 
             }
             catch (NoSuchItemInDbException ex)
             {
-                return NotFound(new ErrorDTO() { Code = 404, Message = ex.Message });
+                return NotFound(new ErrorDTO(404, ex.Message));
             } catch (NotSupportedException ex)
             {
-                return BadRequest(new ErrorDTO() { Code = 400, Message = ex.Message });
+                return BadRequest(new ErrorDTO(400, ex.Message));
             }
             catch (DbException ex)
             {
-                return StatusCode(500, new ErrorDTO() { Code = 500, Message = "A database error occurred. Please try again." });
+                return StatusCode(500, new ErrorDTO(500, "A database error occurred. Please try again."));
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ErrorDTO {Code =500, Message = ex.Message });
+                return StatusCode(500, new ErrorDTO (500, ex.Message));
             }
         }
 
         [HttpGet("get")]
-        public async Task<IActionResult> GetAll([FromQuery] string payload)
+        [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetAll([FromQuery] string payload ,[FromQuery] int? schemeId, [FromQuery] string? route)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            
             if (payload == null)
             {
-                return BadRequest(new ErrorDTO() { Code = 409, Message = "Payload Cant be Empty" });
+                return BadRequest(new ErrorDTO(409, "Payload Cant be Empty"));
             }
             try
             {
@@ -79,12 +79,29 @@ namespace Health_Insurance_Application.Controllers
                     var res = await _schemeService.GetAllSchemeRoutes();
                     return Ok(res);
                 }
-                return BadRequest(new ErrorDTO() { Code = 400 , Message = "Please Check payload" });
-                
-            }catch(Exception ex)
+                if(payload == "getById" )
+                {
+                    if(schemeId == null) return BadRequest(new ErrorDTO(400, "SchemeId cant be null"));
+                    var res = await _schemeService.GetSchemeById((int) schemeId);
+                    return Ok(res);
+                }
+                if(payload == "getByRT")
+                {
+                    if(route == null) return BadRequest(new ErrorDTO(400, "Route cant be null"));
+                    var res = await _schemeService.GetByRouteTitle(route);
+                    return Ok(res);
+                }
+                return BadRequest(new ErrorDTO( 400, "Please Check payload"));
+            }catch(NoSuchItemInDbException ex)
             {
-                return StatusCode(500, new ErrorDTO() {Code= 500, Message = ex.Message });
+                return NotFound(new ErrorDTO(404, ex.Message));
+            }
+            
+            catch(Exception ex)
+            {
+                return StatusCode(500, new ErrorDTO(500, ex.Message)) ;
             }
         }
+
     }
 }

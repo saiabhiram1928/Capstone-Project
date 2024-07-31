@@ -6,12 +6,16 @@ import {
     MenuItem,
     Avatar,
     Typography,
+    useAccordion,
   } from "@material-tailwind/react";
+import { Link } from 'react-router-dom';
+import { useAuth } from '../Context/AuthAndStateManager';
 
 const Profile_Component = () => {
+  const {role , handleLogout} = useAuth()
   return (
     <div className=''>
-    <Menu >
+    <Menu placement="bottom-end">
     <MenuHandler>
       <Avatar
         variant="circular"
@@ -38,7 +42,7 @@ const Profile_Component = () => {
         </svg>
 
         <Typography variant="small" className="font-medium">
-          My Profile
+        <Link to="/portal">{role} Portal </Link> 
         </Typography>
       </MenuItem>
       <MenuItem className="flex items-center gap-2">
@@ -76,7 +80,7 @@ const Profile_Component = () => {
             fill="#90A4AE"
           />
         </svg>
-        <Typography variant="small" className="font-medium">
+        <Typography onClick={handleLogout} variant="small" className="font-medium">
           Log Out
         </Typography>
       </MenuItem>
