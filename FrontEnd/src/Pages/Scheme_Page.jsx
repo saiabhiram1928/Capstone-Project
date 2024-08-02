@@ -9,6 +9,7 @@ import Loader_Component from '../Components/Loader_Component'
 
 const Scheme_Page = () => {
   const { name } = useParams(); 
+  const {role , user} = useAuth()
   const [scheme, setScheme] = useState({})
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
@@ -18,6 +19,11 @@ const Scheme_Page = () => {
 
     return words.slice(0, wordLimit).join(' ') + '...';
   }
+  const handleApplyNow = ()=>{
+    if(!user) alert("Please Login To Apply")
+     if(role == "Agent") alert("You Cant Apply With Agent Credentials");
+    navigate(`/apply-policy/${scheme.routeTitle}`)
+   }
   useEffect(()=>{
     const fetchData = async () => {
       try {
@@ -49,7 +55,7 @@ const Scheme_Page = () => {
     </h1>
     <p class="mb-8 leading-relaxed">{trimDescription(scheme.schemeDescription, 20)}</p>
     <div class="flex justify-center">
-      <Button className='flex items-center bg-blue-500'>Apply Now</Button>
+      <Button onClick={handleApplyNow} className='flex items-center bg-blue-500'>Apply Now</Button>
     </div>
   </div>
 </div>

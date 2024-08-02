@@ -32,6 +32,8 @@ namespace Health_Insurance_Application.Services
             user.CreatedAt =DateTime.Now;
             user.Salt = salt;
             user.Password  = passwd;
+            user.DateOfBirth = userRegisterDTO.DateOfBirth;
+            user.Gender = userRegisterDTO.Gender;
             return user;
             
         }

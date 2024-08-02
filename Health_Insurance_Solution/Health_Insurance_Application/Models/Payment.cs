@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using Health_Insurance_Application.Models.Enums;
+using System.Text.Json.Serialization;
 
 namespace Health_Insurance_Application.Models
 {
@@ -11,6 +14,7 @@ namespace Health_Insurance_Application.Models
 
         public int PolicyId { get; set; }
         [ForeignKey(nameof(PolicyId))]
+        [JsonIgnore]
         public Policy Policy { get; set; }
         public int CustomerId { get; set; }
         [ForeignKey(nameof(CustomerId))]
@@ -20,6 +24,7 @@ namespace Health_Insurance_Application.Models
         public string Remarks { get; set; }
         public float PaymentAmount { get; set; }   
         public bool PaymentDone { get; set; }
-        public bool PaymentDueDate { get; set; }
+        public DateTime PaymentDueDate { get; set; }
+        public PaymentTypeEnum PaymentType { get; set; }
     }
 }

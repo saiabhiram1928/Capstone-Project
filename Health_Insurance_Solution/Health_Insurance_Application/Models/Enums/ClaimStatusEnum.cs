@@ -3,7 +3,6 @@
     public enum ClaimStatusEnum
     {
         Approved,
-        Pending,
         Rejected,
         UnderReview
     }

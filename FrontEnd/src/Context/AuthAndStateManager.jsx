@@ -131,7 +131,8 @@ const useAuth = () => {
       handlerUserRegister,
       handleUserLogin,
       role,
-      handleLogout
+      handleLogout,
+      fetchWithAuth
       }
 
     
@@ -147,7 +148,7 @@ const useAuth = () => {
 export default AuthProvider
 export {useAuth}
 
-const getCookie = (name) => {
+export const getCookie = (name) => {
   let nameEQ = name + "=";
   let ca = document.cookie.split(';');
   for (let i = 0; i < ca.length; i++) {
@@ -192,7 +193,7 @@ const encryptToken = (token,) => {
   return CryptoJS.AES.encrypt(token, secretKey).toString();
 };
 
-const decryptToken = (encryptedToken) => {
+export const decryptToken = (encryptedToken) => {
   const bytes = CryptoJS.AES.decrypt(encryptedToken, secretKey);
   return bytes.toString(CryptoJS.enc.Utf8);
 };

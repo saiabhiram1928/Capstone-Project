@@ -2,7 +2,7 @@
 {
     public enum PaymentFrequencyEnum
     {
-        Anually,
+        Annually,
         Quarterly,
         Monthly
     }

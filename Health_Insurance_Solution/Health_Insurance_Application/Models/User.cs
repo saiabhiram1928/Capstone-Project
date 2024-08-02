@@ -27,5 +27,7 @@ namespace Health_Insurance_Application.Models
         public string MobileNumber { get; set; }
         public DateTime CreatedAt { get; set; } 
         public DateTime LastUpdated { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public GenderEnum Gender { get; set; }
     }
 }

@@ -49,7 +49,7 @@ const Premium_Calculator_Comp = ({ data }) => {
 
   const handlePaymentTermChange = (event) => {
     const value = event.target.value;
-    // Allow empty input or valid integers
+    
     if (/^\d*$/.test(value)) {
       setPaymentTerm(value);
     } else {

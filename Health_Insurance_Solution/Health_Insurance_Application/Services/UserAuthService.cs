@@ -59,9 +59,8 @@ namespace Health_Insurance_Application.Services
 
             Customer customer = new Customer
             {
-                DateOfBirth = registerDTO.DateOfBirth,
+                
                 EmergenceyContact = registerDTO.EmergenceyContact,
-                Gender = registerDTO.Gender,
                 Uid = user.Uid
             };
             await _customerRepo.Add(customer);
@@ -87,9 +86,7 @@ namespace Health_Insurance_Application.Services
             {
                 Customer customer = new Customer
                 {
-                    DateOfBirth = registerDTO.DateOfBirth,
                     EmergenceyContact = registerDTO.EmergenceyContact,
-                    Gender = registerDTO.Gender,
                     Uid = user.Uid
                 };
                 await _customerRepo.Add(customer);

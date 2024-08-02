@@ -1,7 +1,8 @@
 ﻿    using Health_Insurance_Application.Models.Enums;
     using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
-    namespace Health_Insurance_Application.Models
+namespace Health_Insurance_Application.Models
     {
         public class Scheme
         {
@@ -25,5 +26,7 @@
                  public int PaymentTerm {  get; set; }    //in years
                 public int CoverageYears { get; set; } // in years and alway greater than paymentTerm
                 public float BaseCoverageAmount { get; set; } // Initial Premium
+        [JsonIgnore]
+               public IList<Policy> Policies { get; set; }
         }
     }

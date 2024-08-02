@@ -10,8 +10,12 @@ import Profile_Page from '../Pages/Profile_Page'
 import Schemes_Page from '../Pages/Schemes_Page.jsx'
 import SchemesData from '../DATA/Scheme_Data.jsx'
 import Scheme_Page from '../Pages/Scheme_Page.jsx'
-import Portal_Page from '../Pages/Portal_Page.jsx'
+import Portal_Profile_Page from '../Pages/Portal_Profile_Page.jsx'
 import ApplyPolicy_Page from '../Pages/ApplyPolicy_Page.jsx'
+import Portal_Layout from '../Portal_Layout.jsx'
+import Portal_Policy_Page from '../Pages/Portal_Policy_Page.jsx'
+import Portal_Payment_Page from '../Pages/Portal_Payment_Page.jsx'
+import ApplyClaimPage from '../Pages/Apply_Claim_Page.jsx'
 
 const RoutesManager = () => {
     const { user , role } = useAuth()
@@ -30,8 +34,10 @@ const RoutesManager = () => {
       {
         user ? (<>
         <Route path='/profile' element = {<Profile_Page/> }/>
-        <Route path = '/portal' element = {<Portal_Page role = {role}/>} />
-         <Route path='/apply-policy' element={<Layout><ApplyPolicy_Page/></Layout>} />
+        <Route path = '/portal/profile' element = {<Portal_Layout><Portal_Profile_Page role = {role}/></Portal_Layout> } />
+        <Route path='/apply-policy/:name' element={<ApplyPolicy_Page/>} />
+        <Route path = '/portal/policies' element = {<Portal_Layout> <Portal_Policy_Page/></Portal_Layout> }/>
+        <Route path = '/portal/payments' element = {<Portal_Layout> <Portal_Payment_Page/> </Portal_Layout>}/>
         </>) : (<>
           <Route path = '/login' element = {<Layout><Login_Page/></Layout>}/>
           <Route path = '/register' element = {<Layout><Register_Page/></Layout>}/>

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Health_Insurance_Application.Migrations
 {
     [DbContext(typeof(HealthInsuranceContext))]
-    [Migration("20240731052933_update-1")]
-    partial class update1
+    [Migration("20240802061221_intial")]
+    partial class intial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -58,6 +58,9 @@ namespace Health_Insurance_Application.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClaimId"), 1L, 1);
 
+                    b.Property<DateTime>("AcceptedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<float>("AmountApproved")
                         .HasColumnType("real");
 
@@ -67,15 +70,18 @@ namespace Health_Insurance_Application.Migrations
                     b.Property<int?>("ApprovedBy")
                         .HasColumnType("int");
 
+                    b.Property<string>("ClaimReason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ClaimStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("ClaimedDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int?>("HospitalAgentId")
-                        .IsRequired()
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<int>("PolicyId")
@@ -87,8 +93,6 @@ namespace Health_Insurance_Application.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("HospitalAgentId");
-
                     b.HasIndex("PolicyId");
 
                     b.ToTable("Claims");
@@ -97,14 +101,42 @@ namespace Health_Insurance_Application.Migrations
                         new
                         {
                             ClaimId = 1,
+                            AcceptedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             AmountApproved = 1500f,
                             AmountClaimed = 2000f,
                             ApprovedBy = 1,
+                            ClaimReason = "Hosiptal Bills",
                             ClaimStatus = "Approved",
+                            ClaimedDate = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2386),
                             CustomerId = 10001,
-                            HospitalAgentId = 11111,
                             PolicyId = 1
                         });
+                });
+
+            modelBuilder.Entity("Health_Insurance_Application.Models.CorporateEmployee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmployeeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PolicyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PolicyId");
+
+                    b.ToTable("CorporateEmployees");
                 });
 
             modelBuilder.Entity("Health_Insurance_Application.Models.Customer", b =>
@@ -115,14 +147,7 @@ namespace Health_Insurance_Application.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"), 1L, 1);
 
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("EmergenceyContact")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Gender")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -140,11 +165,35 @@ namespace Health_Insurance_Application.Migrations
                         new
                         {
                             CustomerId = 10001,
-                            DateOfBirth = new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EmergenceyContact = "888888888",
-                            Gender = "Male",
                             Uid = 101
                         });
+                });
+
+            modelBuilder.Entity("Health_Insurance_Application.Models.FamilyMember", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AadharId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PolicyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PolicyId");
+
+                    b.ToTable("FamilyMembers");
                 });
 
             modelBuilder.Entity("Health_Insurance_Application.Models.Hospital", b =>
@@ -252,12 +301,15 @@ namespace Health_Insurance_Application.Migrations
                     b.Property<bool>("PaymentDone")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("PaymentDueDate")
-                        .HasColumnType("bit");
+                    b.Property<DateTime>("PaymentDueDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PaymentType")
+                        .HasColumnType("int");
 
                     b.Property<int>("PolicyId")
                         .HasColumnType("int");
@@ -283,10 +335,11 @@ namespace Health_Insurance_Application.Migrations
                             Id = 10001,
                             CustomerId = 10001,
                             PaymentAmount = 500f,
-                            PaymentDate = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2384),
+                            PaymentDate = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2525),
                             PaymentDone = false,
-                            PaymentDueDate = false,
+                            PaymentDueDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PaymentStatus = "Completed",
+                            PaymentType = 0,
                             PolicyId = 1,
                             Remarks = "First payment of the year",
                             TransactionId = 100001
@@ -300,6 +353,9 @@ namespace Health_Insurance_Application.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PolicyId"), 1L, 1);
+
+                    b.Property<int>("CoverageYears")
+                        .HasColumnType("int");
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
@@ -329,6 +385,9 @@ namespace Health_Insurance_Application.Migrations
                     b.Property<float>("QuoteAmount")
                         .HasColumnType("real");
 
+                    b.Property<int>("QuotePaymentTerm")
+                        .HasColumnType("int");
+
                     b.Property<string>("RenewalStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -340,8 +399,7 @@ namespace Health_Insurance_Application.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("SchemeId")
-                        .IsUnique();
+                    b.HasIndex("SchemeId");
 
                     b.ToTable("Policies");
 
@@ -349,15 +407,17 @@ namespace Health_Insurance_Application.Migrations
                         new
                         {
                             PolicyId = 1,
+                            CoverageYears = 0,
                             CustomerId = 10001,
-                            LastPaymentDate = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2213),
-                            NextPaymentDueDate = new DateTime(2025, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2213),
+                            LastPaymentDate = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2285),
+                            NextPaymentDueDate = new DateTime(2025, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2287),
                             PaymentFrequency = "Quarterly",
-                            PolicyEndDate = new DateTime(2025, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2207),
-                            PolicyExpiryDate = new DateTime(2025, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2216),
-                            PolicyStartDate = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2207),
+                            PolicyEndDate = new DateTime(2025, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2280),
+                            PolicyExpiryDate = new DateTime(2025, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2291),
+                            PolicyStartDate = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2280),
                             PremiumAmount = 500f,
                             QuoteAmount = 1000f,
+                            QuotePaymentTerm = 0,
                             RenewalStatus = "Renwed",
                             SchemeId = 1
                         });
@@ -377,15 +437,8 @@ namespace Health_Insurance_Application.Migrations
                     b.Property<float>("DiscountApplied")
                         .HasColumnType("real");
 
-                    b.Property<string>("NewPaymentFrequency")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("NewPolicyStartDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<float>("NewPremiumAmount")
-                        .HasColumnType("real");
 
                     b.Property<int>("PolicyId")
                         .HasColumnType("int");
@@ -411,11 +464,9 @@ namespace Health_Insurance_Application.Migrations
                             RenewalId = 1,
                             CustomerId = 10001,
                             DiscountApplied = 0f,
-                            NewPaymentFrequency = "Anually",
-                            NewPolicyStartDate = new DateTime(2025, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2399),
-                            NewPremiumAmount = 550f,
+                            NewPolicyStartDate = new DateTime(2025, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2555),
                             PolicyId = 1,
-                            RenewalDate = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2398),
+                            RenewalDate = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2555),
                             RenewalStatus = "Pending"
                         },
                         new
@@ -423,11 +474,9 @@ namespace Health_Insurance_Application.Migrations
                             RenewalId = 2,
                             CustomerId = 10001,
                             DiscountApplied = 100f,
-                            NewPaymentFrequency = "Quarterly",
-                            NewPolicyStartDate = new DateTime(2026, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2402),
-                            NewPremiumAmount = 800f,
+                            NewPolicyStartDate = new DateTime(2026, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2558),
                             PolicyId = 1,
-                            RenewalDate = new DateTime(2025, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2401),
+                            RenewalDate = new DateTime(2025, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2558),
                             RenewalStatus = "Renwed"
                         });
                 });
@@ -496,7 +545,7 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 5,
                             RouteTitle = "individual-basic-plan",
                             SchemeDescription = "The Individual Basic Plan offers essential health coverage for individuals at an affordable premium. This plan includes coverage for hospitalization, surgery, and emergency care. It is designed for those seeking fundamental protection against medical expenses.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2240),
+                            SchemeLastUpdatedAt = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2321),
                             SchemeName = "Individual Basic Plan",
                             SchemeStartedAt = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             SchemeType = "Individual",
@@ -512,7 +561,7 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 7,
                             RouteTitle = "individual-premium-plan",
                             SchemeDescription = "The Individual Premium Plan provides extensive health coverage for individuals, including benefits for outpatient treatments, specialist consultations, and preventive care. This plan is ideal for those who want a higher level of health security and comprehensive medical benefits.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2243),
+                            SchemeLastUpdatedAt = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2326),
                             SchemeName = "Individual Premium Plan",
                             SchemeStartedAt = new DateTime(2021, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             SchemeType = "Individual",
@@ -528,7 +577,7 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 10,
                             RouteTitle = "individual-elite-plan",
                             SchemeDescription = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda voluptatem totam similique nobis dolore in, velit consectetur perspiciatis vero quas. Esse deleniti commodi perferendis officia saepe natus, quas dolor. Perspiciatis iusto nam optio quo natus amet velit explicabo quod, officia adipisci quia ipsum odio deleniti, fugiat esse illum tenetur obcaecati corporis quasi quibusdam dolorum laboriosam in. Numquam autem temporibus molestiae delectus sequi cupiditate suscipit natus facere enim dolorum sed eaque voluptas repellendus officiis et doloremque totam pariatur, quae, non amet explicabo. Maxime, magni! Ea voluptate aspernatur impedit vitae quasi necessitatibus. Ex, commodi quaerat. Dolor deleniti eos amet non. Optio minima quos incidunt recusandae eveniet, consequuntur earum quam nesciunt tenetur deserunt voluptas tempora ipsa omnis ipsam a iusto rerum, obcaecati aut nulla quo, blanditiis perferendis? Quam quo alias error possimus impedit sapiente commodi earum quaerat? Quas natus rem voluptate, at nostrum ut itaque voluptatibus porro velit labore consequatur obcaecati et nulla nihil cum, provident ratione iusto esse iure! Porro, totam cumque molestias officia minus vel molestiae, quod alias excepturi pariatur voluptates quae, cupiditate voluptatem fugit delectus. Ipsa temporibus similique odit veniam quo, cupiditate nesciunt dignissimos consequuntur aperiam, eveniet facilis recusandae voluptates nulla quaerat mollitia labore quae! Sapiente odio deserunt eum suscipit.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2245),
+                            SchemeLastUpdatedAt = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2329),
                             SchemeName = "Individual Elite Plan",
                             SchemeStartedAt = new DateTime(2022, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             SchemeType = "Individual",
@@ -544,7 +593,7 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 5,
                             RouteTitle = "corporate-standard-plan",
                             SchemeDescription = "The Corporate Standard Plan offers essential health coverage for employees of small and medium-sized businesses. It includes hospitalization and emergency care benefits, providing basic protection to ensure the well-being of your workforce.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2296),
+                            SchemeLastUpdatedAt = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2330),
                             SchemeName = "Corporate Standard Plan",
                             SchemeStartedAt = new DateTime(2019, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             SchemeType = "Corporate",
@@ -560,7 +609,7 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 7,
                             RouteTitle = "corporate-comprehensive-plan",
                             SchemeDescription = "The Corporate Comprehensive Plan provides extensive health coverage for employees, including benefits for outpatient treatments, preventive care, and specialist consultations. This plan is designed for businesses that want to offer their employees a higher level of health security and comprehensive medical benefits.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2300),
+                            SchemeLastUpdatedAt = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2336),
                             SchemeName = "Corporate Comprehensive Plan",
                             SchemeStartedAt = new DateTime(2020, 8, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             SchemeType = "Corporate",
@@ -576,7 +625,7 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 10,
                             RouteTitle = "corporate-premium-plan",
                             SchemeDescription = "The Corporate Premium Plan offers the highest level of health coverage for corporate employees, including extensive inpatient and outpatient benefits, dental care, and access to a wide network of top healthcare providers. This plan is tailored for businesses that seek to provide the ultimate health protection and peace of mind for their employees.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2303),
+                            SchemeLastUpdatedAt = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2341),
                             SchemeName = "Corporate Premium Plan",
                             SchemeStartedAt = new DateTime(2021, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             SchemeType = "Corporate",
@@ -592,7 +641,7 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 5,
                             RouteTitle = "family-basic-plan",
                             SchemeDescription = "The Family Basic Plan offers essential health coverage for families, including hospitalization and emergency care benefits. This plan is designed to provide fundamental protection for your family’s health needs at an affordable premium.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2305),
+                            SchemeLastUpdatedAt = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2343),
                             SchemeName = "Family Basic Plan",
                             SchemeStartedAt = new DateTime(2018, 2, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             SchemeType = "Family",
@@ -608,7 +657,7 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 7,
                             RouteTitle = "family-comprehensive-plan",
                             SchemeDescription = "The Family Comprehensive Plan provides extensive health coverage for families, including benefits for outpatient treatments, specialist consultations, and preventive care. This plan is ideal for families seeking a higher level of health security and comprehensive medical benefits.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2307),
+                            SchemeLastUpdatedAt = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2346),
                             SchemeName = "Family Comprehensive Plan",
                             SchemeStartedAt = new DateTime(2019, 7, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             SchemeType = "Family",
@@ -624,7 +673,7 @@ namespace Health_Insurance_Application.Migrations
                             PaymentTerm = 10,
                             RouteTitle = "family-elite-plan",
                             SchemeDescription = "The Family Elite Plan offers the highest level of health coverage for families, including extensive inpatient and outpatient benefits, dental care, and access to a wide network of top healthcare providers. This plan is tailored for families that seek the ultimate health protection and peace of mind.",
-                            SchemeLastUpdatedAt = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(2308),
+                            SchemeLastUpdatedAt = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(2348),
                             SchemeName = "Family Elite Plan",
                             SchemeStartedAt = new DateTime(2020, 10, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             SchemeType = "Family",
@@ -647,11 +696,18 @@ namespace Health_Insurance_Application.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -691,45 +747,51 @@ namespace Health_Insurance_Application.Migrations
                         {
                             Uid = 101,
                             Address = "St Street opp lalbagh, chennai , TamilNadu",
-                            CreatedAt = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(1932),
+                            CreatedAt = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(1879),
+                            DateOfBirth = new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "customer1@gmail.com",
                             FirstName = "Customer",
+                            Gender = "Male",
                             LastName = "Test",
-                            LastUpdated = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(1947),
+                            LastUpdated = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(1894),
                             MobileNumber = "9999999991",
-                            Password = new byte[] { 50, 171, 202, 48, 240, 87, 137, 2, 219, 243, 202, 6, 110, 203, 191, 167, 160, 103, 78, 33, 100, 174, 20, 164, 39, 59, 3, 88, 126, 226, 45, 20, 110, 134, 32, 144, 183, 243, 97, 208, 195, 127, 126, 8, 215, 63, 0, 107, 87, 242, 43, 242, 140, 157, 190, 181, 184, 12, 228, 117, 19, 7, 44, 0 },
+                            Password = new byte[] { 202, 165, 132, 102, 100, 167, 250, 128, 208, 130, 223, 94, 150, 69, 65, 54, 33, 80, 148, 236, 48, 88, 41, 80, 36, 154, 201, 4, 249, 112, 75, 218, 2, 95, 162, 78, 210, 154, 144, 118, 179, 166, 145, 22, 32, 195, 25, 9, 148, 14, 120, 32, 76, 210, 131, 118, 55, 24, 57, 52, 187, 128, 1, 82 },
                             Role = "Customer",
-                            Salt = new byte[] { 226, 83, 198, 146, 107, 34, 240, 71, 15, 43, 52, 217, 221, 223, 1, 142, 12, 155, 204, 166, 224, 40, 106, 65, 43, 39, 1, 64, 23, 24, 59, 150, 184, 227, 217, 70, 136, 235, 137, 110, 56, 186, 83, 166, 179, 211, 127, 240, 240, 214, 87, 112, 163, 231, 247, 222, 165, 73, 232, 19, 65, 25, 128, 242, 0, 254, 50, 247, 90, 241, 71, 50, 43, 218, 81, 211, 84, 119, 69, 96, 74, 159, 233, 153, 180, 157, 72, 163, 181, 66, 25, 230, 223, 36, 249, 178, 168, 61, 169, 88, 67, 98, 57, 61, 7, 245, 99, 79, 6, 201, 242, 253, 130, 202, 104, 126, 196, 78, 193, 122, 21, 114, 204, 160, 140, 114, 221, 95 },
+                            Salt = new byte[] { 248, 186, 113, 45, 169, 78, 141, 0, 77, 244, 70, 144, 80, 86, 194, 26, 22, 75, 110, 202, 201, 131, 56, 132, 124, 127, 43, 210, 197, 38, 167, 109, 56, 182, 46, 166, 185, 231, 143, 71, 175, 35, 61, 218, 212, 188, 87, 192, 3, 149, 93, 207, 95, 50, 217, 78, 46, 161, 220, 47, 227, 72, 214, 243, 86, 67, 48, 101, 165, 182, 254, 209, 43, 223, 252, 181, 159, 28, 252, 240, 9, 224, 214, 178, 166, 252, 81, 52, 227, 153, 90, 127, 194, 7, 104, 39, 217, 74, 87, 184, 109, 180, 166, 157, 0, 67, 7, 236, 27, 96, 180, 226, 29, 60, 136, 141, 29, 36, 210, 243, 125, 54, 220, 183, 53, 89, 83, 80 },
                             Zipcode = "507001"
                         },
                         new
                         {
                             Uid = 102,
                             Address = "St Street opp lalbagh, chennai , TamilNadu",
-                            CreatedAt = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(1965),
+                            CreatedAt = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(1927),
+                            DateOfBirth = new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "agent@gmail.com",
                             FirstName = "Agent",
+                            Gender = "Male",
                             LastName = "Test",
-                            LastUpdated = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(1965),
+                            LastUpdated = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(1927),
                             MobileNumber = "9999999999",
-                            Password = new byte[] { 50, 171, 202, 48, 240, 87, 137, 2, 219, 243, 202, 6, 110, 203, 191, 167, 160, 103, 78, 33, 100, 174, 20, 164, 39, 59, 3, 88, 126, 226, 45, 20, 110, 134, 32, 144, 183, 243, 97, 208, 195, 127, 126, 8, 215, 63, 0, 107, 87, 242, 43, 242, 140, 157, 190, 181, 184, 12, 228, 117, 19, 7, 44, 0 },
+                            Password = new byte[] { 202, 165, 132, 102, 100, 167, 250, 128, 208, 130, 223, 94, 150, 69, 65, 54, 33, 80, 148, 236, 48, 88, 41, 80, 36, 154, 201, 4, 249, 112, 75, 218, 2, 95, 162, 78, 210, 154, 144, 118, 179, 166, 145, 22, 32, 195, 25, 9, 148, 14, 120, 32, 76, 210, 131, 118, 55, 24, 57, 52, 187, 128, 1, 82 },
                             Role = "Agent",
-                            Salt = new byte[] { 226, 83, 198, 146, 107, 34, 240, 71, 15, 43, 52, 217, 221, 223, 1, 142, 12, 155, 204, 166, 224, 40, 106, 65, 43, 39, 1, 64, 23, 24, 59, 150, 184, 227, 217, 70, 136, 235, 137, 110, 56, 186, 83, 166, 179, 211, 127, 240, 240, 214, 87, 112, 163, 231, 247, 222, 165, 73, 232, 19, 65, 25, 128, 242, 0, 254, 50, 247, 90, 241, 71, 50, 43, 218, 81, 211, 84, 119, 69, 96, 74, 159, 233, 153, 180, 157, 72, 163, 181, 66, 25, 230, 223, 36, 249, 178, 168, 61, 169, 88, 67, 98, 57, 61, 7, 245, 99, 79, 6, 201, 242, 253, 130, 202, 104, 126, 196, 78, 193, 122, 21, 114, 204, 160, 140, 114, 221, 95 },
+                            Salt = new byte[] { 248, 186, 113, 45, 169, 78, 141, 0, 77, 244, 70, 144, 80, 86, 194, 26, 22, 75, 110, 202, 201, 131, 56, 132, 124, 127, 43, 210, 197, 38, 167, 109, 56, 182, 46, 166, 185, 231, 143, 71, 175, 35, 61, 218, 212, 188, 87, 192, 3, 149, 93, 207, 95, 50, 217, 78, 46, 161, 220, 47, 227, 72, 214, 243, 86, 67, 48, 101, 165, 182, 254, 209, 43, 223, 252, 181, 159, 28, 252, 240, 9, 224, 214, 178, 166, 252, 81, 52, 227, 153, 90, 127, 194, 7, 104, 39, 217, 74, 87, 184, 109, 180, 166, 157, 0, 67, 7, 236, 27, 96, 180, 226, 29, 60, 136, 141, 29, 36, 210, 243, 125, 54, 220, 183, 53, 89, 83, 80 },
                             Zipcode = "507002"
                         },
                         new
                         {
                             Uid = 103,
                             Address = "St Street opp lalbagh, chennai , TamilNadu",
-                            CreatedAt = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(1983),
+                            CreatedAt = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(1953),
+                            DateOfBirth = new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@gmail.com",
                             FirstName = "Admin",
+                            Gender = "Male",
                             LastName = "Test",
-                            LastUpdated = new DateTime(2024, 7, 31, 10, 59, 32, 743, DateTimeKind.Local).AddTicks(1983),
+                            LastUpdated = new DateTime(2024, 8, 2, 11, 42, 21, 4, DateTimeKind.Local).AddTicks(1954),
                             MobileNumber = "111111111",
-                            Password = new byte[] { 50, 171, 202, 48, 240, 87, 137, 2, 219, 243, 202, 6, 110, 203, 191, 167, 160, 103, 78, 33, 100, 174, 20, 164, 39, 59, 3, 88, 126, 226, 45, 20, 110, 134, 32, 144, 183, 243, 97, 208, 195, 127, 126, 8, 215, 63, 0, 107, 87, 242, 43, 242, 140, 157, 190, 181, 184, 12, 228, 117, 19, 7, 44, 0 },
+                            Password = new byte[] { 202, 165, 132, 102, 100, 167, 250, 128, 208, 130, 223, 94, 150, 69, 65, 54, 33, 80, 148, 236, 48, 88, 41, 80, 36, 154, 201, 4, 249, 112, 75, 218, 2, 95, 162, 78, 210, 154, 144, 118, 179, 166, 145, 22, 32, 195, 25, 9, 148, 14, 120, 32, 76, 210, 131, 118, 55, 24, 57, 52, 187, 128, 1, 82 },
                             Role = "Admin",
-                            Salt = new byte[] { 226, 83, 198, 146, 107, 34, 240, 71, 15, 43, 52, 217, 221, 223, 1, 142, 12, 155, 204, 166, 224, 40, 106, 65, 43, 39, 1, 64, 23, 24, 59, 150, 184, 227, 217, 70, 136, 235, 137, 110, 56, 186, 83, 166, 179, 211, 127, 240, 240, 214, 87, 112, 163, 231, 247, 222, 165, 73, 232, 19, 65, 25, 128, 242, 0, 254, 50, 247, 90, 241, 71, 50, 43, 218, 81, 211, 84, 119, 69, 96, 74, 159, 233, 153, 180, 157, 72, 163, 181, 66, 25, 230, 223, 36, 249, 178, 168, 61, 169, 88, 67, 98, 57, 61, 7, 245, 99, 79, 6, 201, 242, 253, 130, 202, 104, 126, 196, 78, 193, 122, 21, 114, 204, 160, 140, 114, 221, 95 },
+                            Salt = new byte[] { 248, 186, 113, 45, 169, 78, 141, 0, 77, 244, 70, 144, 80, 86, 194, 26, 22, 75, 110, 202, 201, 131, 56, 132, 124, 127, 43, 210, 197, 38, 167, 109, 56, 182, 46, 166, 185, 231, 143, 71, 175, 35, 61, 218, 212, 188, 87, 192, 3, 149, 93, 207, 95, 50, 217, 78, 46, 161, 220, 47, 227, 72, 214, 243, 86, 67, 48, 101, 165, 182, 254, 209, 43, 223, 252, 181, 159, 28, 252, 240, 9, 224, 214, 178, 166, 252, 81, 52, 227, 153, 90, 127, 194, 7, 104, 39, 217, 74, 87, 184, 109, 180, 166, 157, 0, 67, 7, 236, 27, 96, 180, 226, 29, 60, 136, 141, 29, 36, 210, 243, 125, 54, 220, 183, 53, 89, 83, 80 },
                             Zipcode = "507003"
                         });
                 });
@@ -757,23 +819,26 @@ namespace Health_Insurance_Application.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Health_Insurance_Application.Models.HospitalAgent", "HospitalAgent")
-                        .WithMany()
-                        .HasForeignKey("HospitalAgentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Health_Insurance_Application.Models.Policy", "Policy")
-                        .WithMany()
+                        .WithMany("Claims")
                         .HasForeignKey("PolicyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Admin");
 
                     b.Navigation("Customer");
 
-                    b.Navigation("HospitalAgent");
+                    b.Navigation("Policy");
+                });
+
+            modelBuilder.Entity("Health_Insurance_Application.Models.CorporateEmployee", b =>
+                {
+                    b.HasOne("Health_Insurance_Application.Models.Policy", "Policy")
+                        .WithMany("CorporateEmployees")
+                        .HasForeignKey("PolicyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Policy");
                 });
@@ -787,6 +852,17 @@ namespace Health_Insurance_Application.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Health_Insurance_Application.Models.FamilyMember", b =>
+                {
+                    b.HasOne("Health_Insurance_Application.Models.Policy", "Policy")
+                        .WithMany("FamilyMembers")
+                        .HasForeignKey("PolicyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Policy");
                 });
 
             modelBuilder.Entity("Health_Insurance_Application.Models.HospitalAgent", b =>
@@ -836,8 +912,8 @@ namespace Health_Insurance_Application.Migrations
                         .IsRequired();
 
                     b.HasOne("Health_Insurance_Application.Models.Scheme", "Scheme")
-                        .WithOne()
-                        .HasForeignKey("Health_Insurance_Application.Models.Policy", "SchemeId")
+                        .WithMany("Policies")
+                        .HasForeignKey("SchemeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -881,9 +957,20 @@ namespace Health_Insurance_Application.Migrations
 
             modelBuilder.Entity("Health_Insurance_Application.Models.Policy", b =>
                 {
+                    b.Navigation("Claims");
+
+                    b.Navigation("CorporateEmployees");
+
+                    b.Navigation("FamilyMembers");
+
                     b.Navigation("Payments");
 
                     b.Navigation("Renewals");
+                });
+
+            modelBuilder.Entity("Health_Insurance_Application.Models.Scheme", b =>
+                {
+                    b.Navigation("Policies");
                 });
 #pragma warning restore 612, 618
         }

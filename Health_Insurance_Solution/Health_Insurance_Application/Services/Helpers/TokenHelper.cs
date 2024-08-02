@@ -40,5 +40,18 @@ namespace Health_Insurance_Application.Services.Helpers
             );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        public int GetUidFromToken()
+        {
+            var userId = _httpContextAccessor.HttpContext?.User?.FindFirst("eid")?.Value;
+            if (userId == null)
+            {
+                throw new UnauthorizedAccessException("The Token is Invalid");
+            }
+            if (int.TryParse(userId, out int eid))
+            {
+                return eid;
+            }
+            return 0;
+        }
     }
 }

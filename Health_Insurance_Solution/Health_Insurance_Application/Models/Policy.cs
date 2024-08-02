@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Health_Insurance_Application.Models.Enums;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Health_Insurance_Application.Models
 {
@@ -19,12 +20,17 @@ namespace Health_Insurance_Application.Models
         public float PremiumAmount { get; set; }
         public PaymentFrequencyEnum PaymentFrequency { get; set; } 
         public float QuoteAmount { get; set; }
+        public int QuotePaymentTerm { get; set; }
         public DateTime LastPaymentDate { get; set; }
         public DateTime NextPaymentDueDate { get; set; }
 
+        public int CoverageYears { get; set; }
         public DateTime PolicyExpiryDate { get; set; }
         public RenewalStatusEnum RenewalStatus { get; set; }
         public IEnumerable<Payment> Payments { get; set; }
         public IEnumerable<Renewal> Renewals { get; set; }  
+        public IEnumerable<FamilyMember> FamilyMembers { get; set; }  
+        public IEnumerable<CorporateEmployee> CorporateEmployees { get; set; }  
+        public IEnumerable<Claims> Claims { get; set; } 
     }
 }

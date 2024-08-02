@@ -12,13 +12,10 @@ namespace Health_Insurance_Application.Models
         public int PolicyId { get; set; }
         [ForeignKey(nameof(PolicyId))]
         public Policy Policy { get; set; }
-
+        public string ClaimReason { get; set; }
         public int CustomerId { get; set; }
         [ForeignKey(nameof(CustomerId))]
         public Customer Customer { get; set; }
-        public int? HospitalAgentId { get; set; }
-        [ForeignKey(nameof(HospitalAgentId))]
-        public HospitalAgent HospitalAgent { get; set; }
         public float AmountClaimed { get; set; }
         public float AmountApproved { get; set; }
         [AllowNull]
@@ -27,5 +24,7 @@ namespace Health_Insurance_Application.Models
         public Admin Admin { get; set; }
         public ClaimStatusEnum ClaimStatus { get; set; }
 
+        public DateTime ClaimedDate { get; set; }
+        public DateTime AcceptedDate { get; set; }
     }
 }

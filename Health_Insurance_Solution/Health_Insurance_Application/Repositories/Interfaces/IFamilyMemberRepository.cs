@@ -2,8 +2,8 @@
 
 namespace Health_Insurance_Application.Repositories.Interfaces
 {
-    public interface IAdminRepository : IRepository<int, Admin>
+    public interface IFamilyMemberRepository : IRepository<int,FamilyMember>
     {
-        public Task<bool> CheckUserExistByUid(int uid);
+
     }
 }

@@ -21,6 +21,8 @@ namespace Health_Insurance_Application.Context
         public DbSet<Claims> Claims { get; set; }
         public DbSet<Renewal> Renewals { get ; set; }
         public DbSet<Hospital> Hosiptals { get; set; }
+        public DbSet<CorporateEmployee> CorporateEmployees { get; set; }
+        public DbSet<FamilyMember> FamilyMembers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,7 +47,9 @@ namespace Health_Insurance_Application.Context
                         Zipcode = "507001",
                         MobileNumber = "9999999991",
                         CreatedAt = DateTime.Now,
-                        LastUpdated = DateTime.Now
+                        LastUpdated = DateTime.Now,
+                        DateOfBirth = new DateTime(1990, 1, 1),
+                        Gender = GenderEnum.Male,
                     },
                     new User
                     {
@@ -60,7 +64,9 @@ namespace Health_Insurance_Application.Context
                         Zipcode = "507002",
                         MobileNumber = "9999999999",
                         CreatedAt = DateTime.Now,
-                        LastUpdated = DateTime.Now
+                        LastUpdated = DateTime.Now,
+                        DateOfBirth = new DateTime(1990, 1, 1),
+                        Gender = GenderEnum.Male,
                     },
                     new User
                     {
@@ -75,7 +81,9 @@ namespace Health_Insurance_Application.Context
                         Zipcode = "507003",
                         MobileNumber = "111111111",
                         CreatedAt = DateTime.Now,
-                        LastUpdated = DateTime.Now
+                        LastUpdated = DateTime.Now,
+                        DateOfBirth = new DateTime(1990, 1, 1),
+                        Gender = GenderEnum.Male,
                     }
                 );;
 
@@ -90,8 +98,7 @@ namespace Health_Insurance_Application.Context
                     {
                         CustomerId = 10001,
                         Uid = 101,
-                        DateOfBirth = new DateTime(1990, 1, 1),
-                        Gender = GenderEnum.Male,
+                     
                         EmergenceyContact = "888888888"
                     }
                 );
@@ -273,11 +280,12 @@ namespace Health_Insurance_Application.Context
                         ClaimId = 1,
                         PolicyId = 1,
                         CustomerId = 10001,
-                        HospitalAgentId = 11111,
                         AmountClaimed = 2000.0f,
                         AmountApproved = 1500.0f,
                         ApprovedBy = 1,
-                        ClaimStatus = ClaimStatusEnum.Approved
+                        ClaimStatus = ClaimStatusEnum.Approved,
+                        ClaimReason = "Hosiptal Bills",
+                        ClaimedDate = DateTime.Now
                     }
                 );
                 modelBuilder.Entity<Hospital>().HasData(
@@ -317,8 +325,6 @@ namespace Health_Insurance_Application.Context
                         CustomerId = 10001,
                         RenewalDate = DateTime.Now,
                         NewPolicyStartDate = DateTime.Now.AddYears(1),
-                        NewPremiumAmount = 550.0f,
-                        NewPaymentFrequency = PaymentFrequencyEnum.Anually,
                         DiscountApplied = 0f,
                         RenewalStatus = RenewalStatusEnum.Pending
                     },
@@ -329,8 +335,6 @@ namespace Health_Insurance_Application.Context
                         CustomerId = 10001,
                         RenewalDate = DateTime.Now.AddYears(1),
                         NewPolicyStartDate = DateTime.Now.AddYears(2),
-                        NewPremiumAmount = 800.0f,
-                        NewPaymentFrequency = PaymentFrequencyEnum.Quarterly,
                         DiscountApplied = 100.0f,
                         RenewalStatus = RenewalStatusEnum.Renwed
                     }
@@ -342,7 +346,7 @@ namespace Health_Insurance_Application.Context
          .Property(c => c.ClaimStatus)
          .HasConversion(new EnumToStringConverter<ClaimStatusEnum>());
 
-            modelBuilder.Entity<Customer>()
+            modelBuilder.Entity<User>()
                 .Property(c => c.Gender)
                 .HasConversion(new EnumToStringConverter<GenderEnum>());
 
@@ -354,9 +358,6 @@ namespace Health_Insurance_Application.Context
                 .Property(p => p.RenewalStatus)
                 .HasConversion(new EnumToStringConverter<RenewalStatusEnum>());
 
-            modelBuilder.Entity<Renewal>()
-                .Property(r => r.NewPaymentFrequency)
-                .HasConversion(new EnumToStringConverter<PaymentFrequencyEnum>());
 
             modelBuilder.Entity<Renewal>()
                 .Property(r => r.RenewalStatus)
@@ -385,12 +386,18 @@ namespace Health_Insurance_Application.Context
                  .WithOne()
                  .HasForeignKey<HospitalAgent>(ha => ha.Uid)
                  .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Policy>()
-                .HasOne(p => p.Scheme)
+            modelBuilder.Entity<CorporateEmployee>()
+                .HasOne(ce => ce.Policy)
                 .WithOne()
-                .HasForeignKey<Policy>(p => p.SchemeId)
+                .HasForeignKey<CorporateEmployee>(ce => ce.PolicyId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<FamilyMember>()
+               .HasOne(fm => fm.Policy)
+               .WithOne()
+               .HasForeignKey<FamilyMember>(fm => fm.PolicyId)
+               .OnDelete(DeleteBehavior.Restrict);
+
 
             modelBuilder.Entity<Renewal>()
              .HasOne(r => r.Policy)
@@ -410,6 +417,13 @@ namespace Health_Insurance_Application.Context
               .HasForeignKey(p => p.PolicyId)
               .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Policy>()
+               .HasOne(p => p.Scheme)
+              .WithMany(s=> s.Policies)
+              .HasForeignKey(p => p.SchemeId)
+              .OnDelete(DeleteBehavior.Restrict);
+
+
             modelBuilder.Entity<Payment>()
               .HasOne(p => p.Customer)
               .WithMany(c => c.Payments)
@@ -427,6 +441,25 @@ namespace Health_Insurance_Application.Context
             .WithMany(h => h.Agents)
             .HasForeignKey( h => h.HosiptalId)
             .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<FamilyMember>()
+            .HasOne(f => f.Policy)
+            .WithMany(p => p.FamilyMembers)
+            .HasForeignKey( f=> f.PolicyId)
+            .OnDelete(DeleteBehavior.Restrict); 
+            
+            modelBuilder.Entity<CorporateEmployee>()
+            .HasOne(c => c.Policy)
+            .WithMany(p => p.CorporateEmployees)
+            .HasForeignKey( c=> c.PolicyId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Claims>()
+            .HasOne(c => c.Policy)
+            .WithMany(p => p.Claims)
+            .HasForeignKey(c => c.PolicyId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

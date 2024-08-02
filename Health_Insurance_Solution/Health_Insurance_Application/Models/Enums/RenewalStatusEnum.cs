@@ -3,7 +3,6 @@
     public enum RenewalStatusEnum
     {
         Pending,
-        Expired,
         Renwed
     }
 }

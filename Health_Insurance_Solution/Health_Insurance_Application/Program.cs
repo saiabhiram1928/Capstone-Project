@@ -97,12 +97,16 @@ namespace Health_Insurance_Application
             builder.Services.AddScoped<IAdminRepository, AdminRepository>();
             builder.Services.AddScoped<ISchemeRepository, SchemeRepository>();
             builder.Services.AddScoped<IPolicyRepository, PolicyRepository>();
+            builder.Services.AddScoped<IFamilyMemberRepository, FamilyMembersRepository>();
+            builder.Services.AddScoped<ICorporateEmployeeRepository, CorporateEmployeesRepository>();
             #endregion
 
             #region Services
             builder.Services.AddScoped<IDTOService, DTOService>();
             builder.Services.AddScoped<IUserAuthService, UserAuthService>();
             builder.Services.AddScoped<ISchemeServices, SchemeServices>();
+            builder.Services.AddScoped<IPolicyService, PolicyServices>();
+            builder.Services.AddScoped<IUserService, UserServices>();
             #endregion
 
             var app = builder.Build();

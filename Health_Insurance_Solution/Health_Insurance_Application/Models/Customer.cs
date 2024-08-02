@@ -1,6 +1,7 @@
 ﻿using Health_Insurance_Application.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Health_Insurance_Application.Models
 {
@@ -11,13 +12,13 @@ namespace Health_Insurance_Application.Models
         public int Uid { get; set; }
         [ForeignKey(nameof(Uid))]
         public User User { get; set; }
-
-        public DateTime DateOfBirth { get; set; }
-        public GenderEnum Gender { get; set; }
         [Phone]
         public string EmergenceyContact { get; set; }
-        public IEnumerable<Policy> Policies { get; set; }   
-        public IEnumerable<Payment> Payments { get; set; }   
+        [JsonIgnore]
+        public IEnumerable<Policy> Policies { get; set; }
+        [JsonIgnore]    
+        public IEnumerable<Payment> Payments { get; set; }
+        [JsonIgnore]
         public IEnumerable<Renewal> Renewals { get; set; }   
         
 
