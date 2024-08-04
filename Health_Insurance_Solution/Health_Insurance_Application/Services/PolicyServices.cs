@@ -46,13 +46,15 @@ namespace Health_Insurance_Application.Services
                     {
                         throw new UnauthorizedAccessException("The Scheme is Not Active");
                     }
-                    var check = await _policyRepo.CheckUserAppliedForPolicy(policyApplyDTO.schemeId);
+                    int uid = _tokenHelper.GetUidFromToken();
+                    var customer = await _customerRepo.GetByUid(uid);
+
+                    var check = await _policyRepo.CheckUserAppliedForPolicy(customer.CustomerId , scheme.SchemeId);
                     if (check)
                     {
                         throw new DuplicateItemException("You Have Already Applied for the Policy");
                     }
-                    int uid = _tokenHelper.GetUidFromToken();
-                    var customer = await _customerRepo.GetByUid(uid);
+                  
                     PremiumReturnDTO premiumReturnDTO = null;
 
                     if (policyApplyDTO.Opt == "normal")
@@ -243,12 +245,16 @@ namespace Health_Insurance_Application.Services
 
         }
 
-        public async Task<IList<Payment>> GetAllPayment()
+        public async Task<IList<Payment>> GetAllPayment(int id)
         {
             int uid = _tokenHelper.GetUidFromToken();
             var customer = await _customerRepo.GetByUid(uid);
             var payments = await _paymentRepo.GetAllPaymentFromCustomerd(customer.CustomerId);
             payments = payments.OrderBy(p => p.PaymentDueDate).ToList();
+            if(id > 0)
+            {
+                payments = payments.Where(p => p.PolicyId ==  id).ToList(); 
+            }
             return payments;
         }
 

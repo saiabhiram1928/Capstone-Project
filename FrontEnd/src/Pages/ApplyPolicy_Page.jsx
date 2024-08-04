@@ -90,7 +90,7 @@ const ApplyPolicy_Page = () => {
           familyMembers,
           corporateMembers,
           optionType});
-          alert(data.message);
+          alert(`Policy Applied Sucesffuly , your Policy Id is ${data.message}`);
           navigate('/');
       }catch(err){
          alert(err);
@@ -184,8 +184,9 @@ const ApplyPolicy_Page = () => {
   };
 
   const handleCorporateMemberChange = (index, field, value) => {
-    const updatedMembers = [...corporateMembers];
-    updatedMembers[index][field] = value;
+    const updatedMembers = corporateMembers.map((member, i) => 
+      i === index ? { ...member, [field]: value } : member
+    );
     setCorporateMembers(updatedMembers);
   };
 
@@ -198,10 +199,9 @@ const ApplyPolicy_Page = () => {
           <Tooltip>
             <Button onClick={handleOpenDrawer} size='md' className='text-3xl' variant="outlined">CARE</Button>
           </Tooltip>
-          <Drawer size={60} placement="top" open={openDrawer} className='grid grid-cols-3 bg-[#FFF8DC]' onClose={handleCloseDrawer}>
+          <Drawer size={60} placement="top" open={openDrawer} className='grid grid-cols-2 bg-[#FFF8DC]' onClose={handleCloseDrawer}>
             <div className='py-3 underline cursor-pointer'><Link to="/" >Home</Link> </div>
-            <div className='py-3 underline cursor-pointer'><Link to="/login">Login</Link> </div>
-            <div className='py-3 underline cursor-pointer'><Link to = "/login">Get a Call From Agent</Link> </div>
+            <div className='py-3 underline cursor-pointer'><Link to = "/portal/profile">Profile</Link> </div>
           </Drawer>
         </div>
         <Typography variant='paragraph' className='font-mono my-3'>Policy Application Page</Typography>
@@ -387,8 +387,14 @@ const ApplyPolicy_Page = () => {
             >
               Add Corporate Member
             </Button>
+            <Typography variant='small' color="gray" className="mt-2 flex items-center gap-1 font-normal" >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="-mt-px h-4 w-4">
+                    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd"/>
+                  </svg>
+                  At Five Corporate Employee Needed
+                </Typography>
             {corporateMembers.map((member, index) => (
-              <div key={index} className="flex gap-4 mt-4">
+              <div key={index} className="flex gap-4 mt-4 flex-col sm:flex-row bg-gray-100 p-5">
                 <Input
                   label="Name"
                   value={member.name}
@@ -401,12 +407,6 @@ const ApplyPolicy_Page = () => {
                   onChange={(e) => handleCorporateMemberChange(index, 'empId', e.target.value)}
                   required
                 />
-                <Typography variant='small' color="gray" className="mt-2 flex items-center gap-1 font-normal" >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="-mt-px h-4 w-4">
-                    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd"/>
-                  </svg>
-                  At Five Corporate Employee Needed
-                </Typography>
                 <Button
                   variant="outlined"
                   onClick={() => handleRemoveCorporateMember(index)}

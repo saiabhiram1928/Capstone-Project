@@ -76,29 +76,32 @@ const Notification_Component = ()=> {
             </IconButton>
         </MenuHandler>
       </Badge>
-        <MenuList className="flex flex-col gap-2">
-        {
-          loading ? (<h1>Loading ...</h1>) : (   
-            <>
+          <MenuList className="flex flex-col gap-2">
             {
-              notifications.map((item)=>(
-                <MenuItem className="flex items-center gap-4 py-2 pl-2 pr-8">
-                  <div className="flex flex-col gap-1">
-                    <Typography variant="small" color="gray" className="font-semibold">
-                      {item.message}
-                    </Typography>
-                    <Typography className="flex items-center gap-1 text-sm font-medium text-blue-gray-500">
-                      <ClockIcon />
-                      {new Date(item?.createdAt).toDateString()}
-                    </Typography>
-                  </div>
-                </MenuItem>
-              ))
+              notifications.length >0 ? (
+            loading ? (<h1>Loading ...</h1>) : (   
+              <>
+              {
+                notifications.map((item)=>(
+                  <MenuItem className="flex items-center gap-4 py-2 pl-2 pr-8">
+                    <div className="flex flex-col gap-1">
+                      <Typography variant="small" color="gray" className="font-semibold">
+                        {item.message}
+                      </Typography>
+                      <Typography className="flex items-center gap-1 text-sm font-medium text-blue-gray-500">
+                        <ClockIcon />
+                        {new Date(item?.createdAt).toDateString()}
+                      </Typography>
+                    </div>
+                  </MenuItem>
+                ))
+              }
+            
+              </>)
+              ) : (<MenuItem>No Notifications</MenuItem>)
             }
-          
-            </>)
-        }
-        </MenuList>
+          </MenuList>
+     
       </Menu>
     );
   }

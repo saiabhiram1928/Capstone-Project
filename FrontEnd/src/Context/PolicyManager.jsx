@@ -72,9 +72,10 @@ export const ApplyClaim = async (bodyData)=>{
     return data;
 }
 
-export const GetPayments = async ()=>{
+export const GetPayments = async (id)=>{
     const token = decryptToken(getCookie('token'));
-    const res = await fetch(`${url}/api/Policy/get-payments`,{
+
+    const res = await fetch(`${url}/api/Policy/get-payments?id=${parseInt(id)}`,{
         method : "GET",
         headers : {
             "Content-Type": "application/json",

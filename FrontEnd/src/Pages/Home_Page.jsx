@@ -3,10 +3,9 @@ import {
     Button,
     Typography,
   } from "@material-tailwind/react";
-import Premium_Calculator_Comp from '../Components/Premium_Calculator_Comp';
 import KPICard_Component from '../Components/KPICard_Component';
-import Hero_Section_Image from '../Assets/Hero_Section_Image.png';
 import Hero_Section_Image_2 from '../Assets/Hero_Section_Image_2.png';
+import { useNavigate } from 'react-router-dom';
 const Kpi_data = [
   {
     title: "Total Claim",
@@ -17,9 +16,9 @@ const Kpi_data = [
    
   },
   {
-    title: "Affiliated Hospitals Total",
+    title: "Locations",
     percentage: "16%",
-    price: "10,342",
+    price: "10+",
     icon : <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
   </svg>
@@ -35,8 +34,8 @@ const Kpi_data = [
   
   },
   {
-    title: "Policies in Our Collection",
-    price: "20,000",
+    title: "Claim Acceptance Rate",
+    price: "70%",
     icon :<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25M9 16.5v.75m3-3v3M15 12v5.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
   </svg>
@@ -45,6 +44,7 @@ const Kpi_data = [
 ];
 
 const Home_Page = () => {
+  const navigate = useNavigate()
   return (
     <>
   <section class="text-gray-600 body-font bg-[#F5F5F5] font-mono">
@@ -55,7 +55,7 @@ const Home_Page = () => {
       </h1>
       <p class="mb-8 leading-relaxed">Health Insurance has become an inevitable part of securing your health and financial well-being. We ensure your secured future with an array of our Health Insurance Policies.Care Health Insurance offers several benefits to the insured, including quality medical check-ups, coverage for treatment expenses, cashless hospitalisation, and more.</p>
       <div class="flex justify-center">
-        <Button variant='outlined' className='flex items-center'>GET A Call From Agent <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 ml-2">
+        <Button variant='outlined' className='flex items-center' onClick={()=>navigate("/register")}> Protect Your Health – Join Us! <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 ml-2">
   <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
 </svg></Button>
       </div>

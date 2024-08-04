@@ -82,10 +82,9 @@ const Register_Page = () => {
           <Tooltip>
             <Button onClick={handleOpenDrawer} size='md' className='text-3xl' variant="outlined">CARE</Button>
           </Tooltip>
-          <Drawer size={60} placement="top" open={openDrawer} className='grid grid-cols-3 bg-[#FFF8DC]' onClose={handleCloseDrawer}>
+          <Drawer size={60} placement="top" open={openDrawer} className='grid grid-cols-2 bg-[#FFF8DC]' onClose={handleCloseDrawer}>
             <div className='py-3 underline cursor-pointer'><Link to="/" >Home</Link> </div>
             <div className='py-3 underline cursor-pointer'><Link to="/login">Login</Link> </div>
-            <div className='py-3 underline cursor-pointer'><Link to = "/login">Get a Call From Agent</Link> </div>
           </Drawer>
         </div>
         <Typography variant='paragraph' className='font-mono'>Register</Typography>

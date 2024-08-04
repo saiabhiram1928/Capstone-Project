@@ -159,11 +159,13 @@ namespace Health_Insurance_Application.Controllers
         [Authorize(Roles = "Customer")]
         [HttpGet("get-payments")]
         [ProducesResponseType(typeof(IList<Payment>), StatusCodes.Status200OK)]
-        public async  Task<IActionResult> GetAllPayments()
+        public async  Task<IActionResult> GetAllPayments([FromQuery]int id)
         {
             try
             {
-               var res = await _policyService.GetAllPayment();
+                var policyID = -1;
+                if (id != -1 ) policyID = id;
+               var res = await _policyService.GetAllPayment(policyID);
                 return Ok(res);
             }
             catch (UnauthorizedAccessException ex)
@@ -178,7 +180,7 @@ namespace Health_Insurance_Application.Controllers
         [Authorize(Roles = "Customer")]
         [HttpPut("premium-pay")]
         [ProducesResponseType(typeof(IList<Payment>), StatusCodes.Status200OK)]
-        public async  Task<IActionResult> GetAllPayments([FromQuery] int paymentId)
+        public async  Task<IActionResult> PremiumPay([FromQuery] int paymentId)
         {
             try
             {

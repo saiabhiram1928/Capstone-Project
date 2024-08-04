@@ -285,7 +285,7 @@ const Portal_Policy_Page = () => {
           <PolicyDetails key={policy.policyId} policy={policy} />
         ))
       ) : (
-        <Typography>No policies applied. <Link to="/policy-page" className="text-blue-500 underline">Apply for a policy</Link></Typography>
+        <Typography>No policies applied. <Link to="/" className="text-blue-500 underline">Apply for a policy</Link></Typography>
       )}
     </div>
   );

@@ -15,73 +15,33 @@ const TABLE_HEAD = ["Policy ID", "Payment Amount", "Payment Type", "Due Date", "
 
 export function PortalPaymentPage() {
   const [rows, setRows] = useState([]);
-  const [filteredRows, setFilteredRows] = useState([]);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const sortRows = (key) => {
-    let sortedRows = [...filteredRows];
-    if (key === 'paymentStatus') {
-      sortedRows.sort((a, b) => {
-        const statusOrder = { 'Pending': 0, 'Paid': 1 };
-        if (sortConfig.direction === 'asc') {
-          return statusOrder[a[key]] - statusOrder[b[key]];
-        } else {
-          return statusOrder[b[key]] - statusOrder[a[key]];
-        }
-      });
-    } else if (key === 'paymentDueDate') {
-      sortedRows.sort((a, b) => {
-        const dateA = new Date(a[key]);
-        const dateB = new Date(b[key]);
-        if (sortConfig.direction === 'asc') {
-          return dateA - dateB;
-        } else {
-          return dateB - dateA;
-        }
-      });
-    }
-    setFilteredRows(sortedRows);
-  };
-
-  const handleSort = (key) => {
-    let direction = 'asc';
-    if (sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc';
-    }
-    setSortConfig({ key, direction });
-    sortRows(key);
-  };
-
-  const handleSearch = (event) => {
+  const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
+  const handleSearchSubmit = async () => {
+    const id = searchTerm.length > 0 ? searchTerm : -1;
+    await fetchData(id);
+  };
+
+  const fetchData = async (searchValue) => {
+    try {
+      setLoading(true);
+      const data = await GetPayments(searchValue);
+      setRows(data);
+    } catch (err) {
+      alert(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const data = await GetPayments();
-        setRows(data);
-        setFilteredRows(data);
-      } catch (err) {
-        alert(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
+    fetchData(-1);
   }, []);
-
-  useEffect(() => {
-    const lowercasedTerm = searchTerm.toLowerCase();
-    const filteredData = rows.filter(row =>
-      row.policyId.toString().includes(lowercasedTerm)
-    );
-    setFilteredRows(filteredData);
-  }, [searchTerm, rows]);
-
   const HandlePayment = async (id) => {
     try {
       setLoading(true);
@@ -108,63 +68,44 @@ export function PortalPaymentPage() {
             <Typography color="gray" className="mt-1 font-normal">
               List of Premium payments associated with your policies
             </Typography>
-            
           </div>
-          <Input
-            type="text"
-            label='Enter Policy Id'
-            placeholder="Search by Policy ID"
-            value={searchTerm}
-            onChange={handleSearch}
-            className="w-full "
-          />
+          <div className="flex items-center gap-2">
+            <Input
+              type="text"
+              label='Enter Policy Id'
+              placeholder="Search by Policy ID"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="w-full "
+            />
+            <Button variant="filled" onClick={handleSearchSubmit}>
+              Search
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardBody className="px-0">
         <table className="w-full min-w-max table-auto text-left">
           <thead>
             <tr>
-              {TABLE_HEAD.map((head, index) => {
-                const isSortable = head === "Status" || head === "Due Date";
-                const key = head === "Status" ? 'paymentStatus' : (head === "Due Date" ? 'paymentDueDate' : null);
-
-                return (
-                  <th
-                    key={index}
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 cursor-pointer"
-                    onClick={() => isSortable && handleSort(key)}
+              {TABLE_HEAD.map((head, index) => (
+                <th
+                  key={index}
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
                   >
-                    <div className="flex items-center justify-between">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal leading-none opacity-70"
-                      >
-                        {head}
-                      </Typography>
-                      {isSortable && sortConfig.key === key && (
-                        <svg
-                          className={`h-4 w-4 ${sortConfig.direction === 'asc' ? 'rotate-180' : ''}`}
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <line x1="18" y1="15" x2="12" y2="9"></line>
-                          <line x1="6" y1="15" x2="12" y2="9"></line>
-                        </svg>
-                      )}
-                    </div>
-                  </th>
-                );
-              })}
+                    {head}
+                  </Typography>
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {filteredRows.map(
+            {rows.map(
               (
                 {
                   id,
@@ -176,13 +117,13 @@ export function PortalPaymentPage() {
                 },
                 index,
               ) => {
-                const isLast = index === filteredRows.length - 1;
+                const isLast = index === rows.length - 1;
                 const classes = isLast
                   ? "p-4"
                   : "p-4 border-b border-blue-gray-50";
 
                 return (
-                  <tr key={policyId}>
+                  <tr key={index}>
                     <td className={classes}>
                       <Typography
                         variant="small"
@@ -224,7 +165,7 @@ export function PortalPaymentPage() {
                         <Chip
                           size="sm"
                           variant="ghost"
-                          value={ paymentStatus}
+                          value={paymentStatus}
                           color={
                             paymentStatus === "Paid"
                               ? "green"

@@ -240,11 +240,12 @@ const Portal_Policy_Page = () => {
         setLoading(true);
         const data = await fetchPoliciesForAdmin(parseInt(id));
         setPolicies(data)
-      }catch(Err){
+      }catch(err){
         alert(err)
+        navigate("/404-notfound")
       }finally{
         setLoading(false);
-        navigate("/404-notfound")
+       
       }
     }
     fetchData();

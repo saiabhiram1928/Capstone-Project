@@ -54,7 +54,7 @@ namespace Health_Insurance_Application.Services
             }
 
             var (passwd, salt) = _hashService.HashPasswd(registerDTO.Password);
-            var user = _dtoService.MapUserRegisterDTOToUser(registerDTO, "Customer", salt, passwd); // Default role as Customer
+            var user = _dtoService.MapUserRegisterDTOToUser(registerDTO, "Customer", salt, passwd);
             user = await _userRepo.Add(user);
 
             Customer customer = new Customer

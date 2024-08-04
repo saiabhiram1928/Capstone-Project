@@ -9,9 +9,9 @@ namespace Health_Insurance_Application.Repositories
     {
        public PolicyRepository(HealthInsuranceContext context) : base(context) { }
 
-        public async Task<bool> CheckUserAppliedForPolicy(int customerId)
+        public async Task<bool> CheckUserAppliedForPolicy(int customerId , int shcemeId)
         {
-            var res = await _context.Policies.AnyAsync(item => item.CustomerId == customerId);
+            var res = await _context.Policies.AnyAsync(item => item.CustomerId == customerId && item.SchemeId == shcemeId );
             return res;
 
         }
@@ -40,7 +40,7 @@ namespace Health_Insurance_Application.Repositories
         }
         public async Task<List<int>> GetPoliciesCountByWeek()
         {
-            DateTime today = DateTime.Today;
+            DateTime today = DateTime.Now;
             DateTime lastWeek = today.AddDays(-7);
 
             var policies = await _context.Policies

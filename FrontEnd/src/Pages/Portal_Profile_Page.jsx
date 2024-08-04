@@ -22,6 +22,7 @@ const Portal_Profile_Page = () => {
     const fetchProfile = async () => {
       try {
         const data = await FetchUserProfile();
+        console.log(data);
         setFormData({
           firstName: data.firstName || '',
           lastName: data.lastName || '',
@@ -47,7 +48,10 @@ const Portal_Profile_Page = () => {
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
   };
-
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0]; 
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -151,7 +155,7 @@ const Portal_Profile_Page = () => {
                   label="Created At"
                   type="date"
                   name="createdAt"
-                  value={formData.createdAt || ''}
+                  value={formatDate(formData.createdAt) || ''}
                   disabled
                 />
               </div>

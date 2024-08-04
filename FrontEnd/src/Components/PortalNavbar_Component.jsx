@@ -4,6 +4,7 @@ import { Navbar, IconButton, Typography, Collapse } from '@material-tailwind/rea
 import Notification_Component from './Notification_Component';
 import Profile_Component from './Profile_Component';
 import routesData from '../DATA/Portal_Navbar_Routes';
+import { Link } from 'react-router-dom';
 
 const PortalNavbar_Component = () => {
     const {role} = useAuth()
@@ -98,7 +99,7 @@ const PortalNavbar_Component = () => {
         <div className="container mx-auto text-black">
            {
             routes.map((item)=>(
-                <Typography className='py-3 flex items-center cursor-pointer'>{item.label}</Typography>
+                <Link to={item.path} className='py-3 flex items-center cursor-pointer'>{item.label}</Link>
             ))
            }
         </div>

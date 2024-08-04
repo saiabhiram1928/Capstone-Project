@@ -12,7 +12,7 @@ import {
 } from "@material-tailwind/react";
 import { useAuth } from '../Context/AuthAndStateManager.jsx';
 import Profile_Component from './Profile_Component';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 
 const Navbar_Component = () => {
@@ -69,7 +69,9 @@ const Navbar_Component = () => {
           variant='h4'
           className="mr-4 cursor-pointer py-1.5 font-mono font-extrabold hover:font-extralight hover:ease-out"
         >
+          <Link to="/">
           CARE
+          </Link>
         </Typography>
         <div className="hidden lg:block">{navList}</div>
         <div className="flex items-center gap-x-1">
@@ -179,7 +181,7 @@ export default Navbar_Component
           menuItems.slice(0, 5).map((item , index)=>{
             return(
               <div className='hover:underline '>
-                 <MenuItem key={index}><Link to={`/scheme/${type}/${item.schemeRoute}`} >{item.schemeRoute}</Link></MenuItem>
+                 <MenuItem key={index}><NavLink to={`/scheme/${type}/${item.schemeRoute}`} >{item.schemeRoute}</NavLink></MenuItem>
               </div>
              
             )

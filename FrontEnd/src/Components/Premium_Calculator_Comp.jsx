@@ -226,7 +226,7 @@ const Premium_Calculator_Comp = ({ data }) => {
                   Premium for {resData.paymentFrequency} = Rs {resData.premium}
                  </Typography>
                 <Typography variant="small" className="flex my-3 font-mono text-cyan-800">
-                 Coverage Term (in years) for Payment Term of {resData.paymentTerm
+                 Coverage Term (in years) for Payment Term of {paymentTerm
                  } (in years) excluding Payment Term = {resData.calCoverageYears} Years
                  </Typography>
                 </>
