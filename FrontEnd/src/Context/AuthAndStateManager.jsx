@@ -23,7 +23,7 @@ const useAuth = () => {
           });
           const data =await res.json();
           if(!res.ok){
-            
+            console.log(data);
             throw new Error("Something Went Wrong While Fetching Routes");
           }
           const segData ={

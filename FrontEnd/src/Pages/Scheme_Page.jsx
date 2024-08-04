@@ -20,8 +20,14 @@ const Scheme_Page = () => {
     return words.slice(0, wordLimit).join(' ') + '...';
   }
   const handleApplyNow = ()=>{
-    if(!user) alert("Please Login To Apply")
-     if(role == "Agent") alert("You Cant Apply With Agent Credentials");
+    if(!user) {
+      alert("Please Login To Apply")
+      return;
+    }
+     if(role == "Admin"){
+      alert("You Cant Apply With Agent Credentials");
+      return;
+     } 
     navigate(`/apply-policy/${scheme.routeTitle}`)
    }
   useEffect(()=>{

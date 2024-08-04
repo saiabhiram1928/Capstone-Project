@@ -10,7 +10,7 @@ const Layout = ({children}) => {
   return (
     <>
     {!isNavbarHidden && <Navbar_Component />}
-    <main className="flex-1">{children}</main>
+    <main className="flex-1 min-h-screen">{children}</main>
     {!isNavbarHidden && <Footer_Component/>}
     </>
   )

@@ -6,6 +6,7 @@ import {
 import KPICard_Component from '../Components/KPICard_Component';
 import Hero_Section_Image_2 from '../Assets/Hero_Section_Image_2.png';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../Context/AuthAndStateManager';
 const Kpi_data = [
   {
     title: "Total Claim",
@@ -45,6 +46,7 @@ const Kpi_data = [
 
 const Home_Page = () => {
   const navigate = useNavigate()
+  const{user} = useAuth()
   return (
     <>
   <section class="text-gray-600 body-font bg-[#F5F5F5] font-mono">
@@ -55,9 +57,12 @@ const Home_Page = () => {
       </h1>
       <p class="mb-8 leading-relaxed">Health Insurance has become an inevitable part of securing your health and financial well-being. We ensure your secured future with an array of our Health Insurance Policies.Care Health Insurance offers several benefits to the insured, including quality medical check-ups, coverage for treatment expenses, cashless hospitalisation, and more.</p>
       <div class="flex justify-center">
-        <Button variant='outlined' className='flex items-center' onClick={()=>navigate("/register")}> Protect Your Health – Join Us! <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 ml-2">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
-</svg></Button>
+        {
+          !user && ( <Button variant='outlined' className='flex items-center' onClick={()=>navigate("/register")}> Protect Your Health – Join Us! <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 ml-2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+        </svg></Button>)
+        }
+       
       </div>
     </div>
 

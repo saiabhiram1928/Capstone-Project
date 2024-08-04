@@ -8,6 +8,7 @@ const Register_Page = () => {
   const {handlerUserRegister} = useAuth()
   const navigate = useNavigate()
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -63,15 +64,19 @@ const Register_Page = () => {
   };
 
   const handleSubmit =  async(e) => {
+
     e.preventDefault();
     if (validateForm()) {
       try{
+        setLoading(true)
         const res = await handlerUserRegister(formData)
         alert("User Created Sucessfully")
         window.location.href = '/'
       }catch(ex){
         alert(ex)
-      }       
+      }finally{
+        setLoading(false)
+      }
     }
   };
 
@@ -231,9 +236,9 @@ const Register_Page = () => {
         </div>
 
         <div className="!mt-12">
-          <button onClick={handleSubmit} className="py-3.5 px-7 text-sm font-semibold tracking-wider rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
+          <Button loading={loading} onClick={handleSubmit} className="py-3.5 px-7 text-sm font-semibold tracking-wider rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
             Sign up
-          </button>
+          </Button>
         </div>
       </form>
     </div>
