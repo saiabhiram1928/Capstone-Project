@@ -22,10 +22,11 @@ namespace Health_Insurance_Application.Models
                 public string RouteTitle { get; set; }
 
                  public string SmallDescription { get; set; }
+                 public bool IsActive { get; set; } = true;
 
-                 public int PaymentTerm {  get; set; }    //in years
-                public int CoverageYears { get; set; } // in years and alway greater than paymentTerm
-                public float BaseCoverageAmount { get; set; } // Initial Premium
+                 public int PaymentTerm {  get; set; }    
+                public int CoverageYears { get; set; } 
+                public float BaseCoverageAmount { get; set; } 
         [JsonIgnore]
                public IList<Policy> Policies { get; set; }
         }

@@ -110,7 +110,7 @@ namespace Health_Insurance_Application.Services
                 NotificationDTO notificationDTO = new NotificationDTO()
                 {
                     CreatedAt = recentClaim.ClaimedDate,
-                    Message = $"The Claim Status of Rs {recentClaim.AmountApproved} is {recentClaim.ClaimStatus}"
+                    Message = $"The Claim Status of Rs {recentClaim.AmountClaimed} is {recentClaim.ClaimStatus}"
                 };
                 notificationDTOs.Add(notificationDTO);
             }

@@ -6,5 +6,6 @@ namespace Health_Insurance_Application.Repositories.Interfaces
     {
         public Task<bool> CanDiscountApply(int customerId);
         public Task<Claims> GetRecentClaim(int customerId);
+        public  Task<int> ClaimsAppledinMonth();
     }
 }

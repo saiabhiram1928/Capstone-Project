@@ -1,5 +1,6 @@
 import React from 'react'
 import {decryptToken, getCookie, useAuth} from '../Context/AuthAndStateManager';
+import { Await } from 'react-router-dom';
 
 const PolicyManager = () => {
   
@@ -133,6 +134,85 @@ export const fetchNotifications = async()=>{
         console.log(data);
         throw new Error("Something Went Wrong , While Fetching Notificaions");
     }
+    return data;
+}
+export const fetchPolicyAnalytics =async ()=>{
+    const token = decryptToken(getCookie('token'));
+    const res = await fetch(`${url}/api/Policy/analytics`,{
+        method : "GET",
+        headers : {
+            "Content-Type": "application/json",
+             "Authorization" : `Bearer ${token}`
+        },
+    });
+    const data = await res.json();
+    console.log(data);
+    if(!res.ok){
+        console.log(data);
+        if(data.code == 404){
+            throw new Error(data.message)
+        }
+        throw new Error("Something Went Wrong , While Fetching Policy Analytics");
+    }
+    return data;
+}
+
+export const GetAllClaimsForAdmin = async()=>{
+    const token = decryptToken(getCookie('token'));
+    const res = await fetch(`${url}/api/Policy/get-claim`,{
+        method : "GET",
+        headers : {
+            "Content-Type": "application/json",
+             "Authorization" : `Bearer ${token}`
+        },
+    });
+    const data = await res.json()
+    if(!res.ok){
+        throw new Error(data.message)
+    }
+    return data;
+}
+export const UpdateClaimStatus = async(claimId, status)=>{
+    const token = decryptToken(getCookie('token'));
+    const res = await fetch(`${url}/api/Policy/claim-status?claimId=${claimId}&status=${status}`,{
+        method : "PATCH",
+        headers : {
+            "Content-Type": "application/json",
+             "Authorization" : `Bearer ${token}`
+        },
+    }); 
+    const data =await res.json()
+    if(!res.ok){
+        throw new Error(data.message)
+    }
+    return data;
+}
+
+export const fetchPoliciesForAdmin = async(id)=>{
+    const token = decryptToken(getCookie('token'));
+    const res = await fetch(`${url}/api/Policy/getAllForAdmin?customerId=${id}`,{
+        method : "GET",
+        headers : {
+            "Content-Type": "application/json",
+             "Authorization" : `Bearer ${token}`
+        },
+    }); 
+    const data = await res.json();
+    if(!res.ok){
+        throw new Error(data.message);
+    }
+    return data;
+}
+export const GetAllPayment = async()=>{
+    const token = decryptToken(getCookie('token'));
+    const res = await fetch(`${url}/api/Policy/paymentsDone`,{
+        method : "GET",
+        headers : {
+            "Content-Type": "application/json",
+             "Authorization" : `Bearer ${token}`
+        },
+    }); 
+    const data = await res.json();
     return data;
 }
 export default PolicyManager

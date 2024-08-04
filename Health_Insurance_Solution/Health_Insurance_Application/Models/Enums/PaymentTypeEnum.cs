@@ -3,6 +3,7 @@
     public enum PaymentTypeEnum
     {
         Renewal,
-        Premium
+        Premium,
+        Claim
     }
 }

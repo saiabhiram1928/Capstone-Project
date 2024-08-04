@@ -42,7 +42,7 @@ const Profile_Component = () => {
         </svg>
 
         <Typography variant="small" className="font-medium">
-        <Link to="/portal">{role} Portal </Link> 
+        <Link to="/portal/profile">{role} Portal </Link> 
         </Typography>
       </MenuItem>
       <MenuItem className="flex items-center gap-2">

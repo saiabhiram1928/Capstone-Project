@@ -11,5 +11,10 @@ namespace Health_Insurance_Application.Services.Interfaces
         public Task<IList<Payment>> GetAllPayment();
         public Task<MessageDTO> PremiumPayment(int paymentId);
         public Task<MessageDTO> RenewalPolicy(int policyId);
+        public Task<PolicyAnalyticsDTO> PolicyAnalytics();
+        public  Task<IList<AdminClaimDTO>> GetAllClaimsForCustomer();
+        public Task<MessageDTO> ChangeClaimStatus(string status, int claimId);
+        public Task<IList<Payment>> GetAllCompletedPaymentsForAdmin();
+        public Task<IList<PolicyReturnDTO>> FetchPolicyOfCustomerForAdmin(int customerId);
     }
 }

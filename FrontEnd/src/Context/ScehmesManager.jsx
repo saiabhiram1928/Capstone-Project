@@ -1,5 +1,6 @@
 import React from 'react'
 import { Navigate } from 'react-router-dom'
+import { decryptToken, getCookie } from './AuthAndStateManager'
 
 
 const ScehmesManager = () => {
@@ -56,5 +57,80 @@ export const calulatePremium = async (schemeId, payload, paymentFrequency ,quote
   }
   return data
 }
+export const GetAllSchemesForAdmin = async()=>{
+  const token = decryptToken(getCookie('token'));
+  const res = await fetch(`${url}/api/Schemes/getAll`,{
+      method : "GET",
+      headers : {
+          "Content-Type": "application/json",
+           "Authorization" : `Bearer ${token}`
+      },
+  }); 
+  const data = await res.json();
+  if(!res.ok){
+    throw new Error(data.message)
+  }
+  return data;
+}
 
+export const UpdateScheme = async (formData, id)=>{
+  const bodyData = {
+    schemeName : formData.schemeName,
+    schemeDescription : formData.schemeDescription,
+    coverageAmount :formData.coverageAmount,
+    basePremiumAmount : formData.basePremiumAmount,
+    schemeType : formData.schemeType,
+    routeTitle : formData.routeTitle,
+    smallDescription : formData.smallDescription,
+    paymentTerm : formData.paymentTerm,
+    coverageYears : formData.coverageYears,
+    baseCoverageAmount : formData.baseCoverageAmount,
+  }
+  const token = decryptToken(getCookie('token'));
+  const res = await fetch(`${url}/api/Schemes/update?schemeId=${id}`,{
+      method : "PUT",
+      headers : {
+          "Content-Type": "application/json",
+           "Authorization" : `Bearer ${token}`
+      },
+      body : JSON.stringify(bodyData)
+  }); 
+  const data = await res.json()
+  if(!res.ok){
+    throw new Error(data.message)
+  }
+  return data;
+}
 
+export const CreateScheme = async(formData)=>{
+  const token = decryptToken(getCookie('token'));
+  const res = await fetch(`${url}/api/Schemes/add`,{
+      method : "POST",
+      headers : {
+          "Content-Type": "application/json",
+           "Authorization" : `Bearer ${token}`
+      },
+      body : JSON.stringify(formData)
+    })
+const data = await res.json();
+if(!res.ok){
+  throw new Error(data.message)
+}
+return data;
+
+}
+export const ChangeSchemeStatus = async(paylod,route) =>{
+  const token = decryptToken(getCookie('token'));
+  const res = await fetch(`${url}/api/Schemes/activity?payload=${paylod}&route=${route}`,{
+      method : "POST",
+      headers : {
+          "Content-Type": "application/json",
+           "Authorization" : `Bearer ${token}`
+      },
+    })
+    const data =await res.json();
+    if(!res.ok){
+      throw new Error(data.message)
+    }
+    return data;
+}

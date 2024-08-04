@@ -5,9 +5,6 @@ import {
     List,
     ListItem,
     ListItemPrefix,
-    ListItemSuffix,
-    Chip,
-    CardFooter,
   } from "@material-tailwind/react";
 import routesData from '../DATA/Portal_Navbar_Routes';
 import { useAuth } from '../Context/AuthAndStateManager';
@@ -24,7 +21,10 @@ const SideBar_Component = ({data}) => {
       <Typography variant="h5" color="blue-gray">
         <span>Care Portal</span>
       </Typography>
-      <Notification_Component/>
+      {
+        role == "Customer" && <Notification_Component/>
+      }
+    
     </div>
     <List className='px-5'>
         {

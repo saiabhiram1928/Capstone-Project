@@ -3,7 +3,6 @@ import { useAuth } from '../Context/AuthAndStateManager';
 import { Navbar, IconButton, Typography, Collapse } from '@material-tailwind/react';
 import Notification_Component from './Notification_Component';
 import Profile_Component from './Profile_Component';
-import SideBar_Component from './SideBar_Component';
 import routesData from '../DATA/Portal_Navbar_Routes';
 
 const PortalNavbar_Component = () => {

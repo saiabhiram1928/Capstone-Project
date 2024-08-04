@@ -5,6 +5,7 @@ using Health_Insurance_Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.Common;
 
 namespace Health_Insurance_Application.Controllers
 {
@@ -27,7 +28,8 @@ namespace Health_Insurance_Application.Controllers
             {
                 var res = await _policyService.AddPolicy(policyApplyDTO);
                 return Ok(res);
-            }catch(DuplicateItemException ex)
+            }
+            catch(DuplicateItemException ex)
             {
                 return Conflict(new ErrorDTO(409, ex.Message));
             }
@@ -81,6 +83,33 @@ namespace Health_Insurance_Application.Controllers
             try
             {
                 var res = await _policyService.FetchPolices();
+                return Ok(res);
+            }
+            catch (NoSuchItemInDbException ex)
+            {
+                return NotFound(new ErrorDTO(404, ex.Message));
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new ErrorDTO(401, ex.Message));
+            }
+            catch (NotSupportedException ex)
+            {
+                return BadRequest(new ErrorDTO(400, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ErrorDTO(500, ex.Message));
+            }
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpGet("getAllForAdmin")]
+        [ProducesResponseType(typeof(IList<PolicyReturnDTO>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> FetchAllForAdmin([FromQuery] int customerId)
+        {
+            try
+            {
+                var res = await _policyService.FetchPolicyOfCustomerForAdmin(customerId);
                 return Ok(res);
             }
             catch (NoSuchItemInDbException ex)
@@ -165,8 +194,84 @@ namespace Health_Insurance_Application.Controllers
                 return StatusCode(500, new ErrorDTO(500, ex.Message));
             }
         }
+        [Authorize(Roles ="Admin")]
+        [HttpGet("analytics")]
+        [ProducesResponseType(typeof(SchemesAnalyticsDTO), StatusCodes.Status200OK)]
+        public async Task<IActionResult> PolicyAnalytics()
+        {
+            try
+            {
+                var res = await _policyService.PolicyAnalytics();
+                return Ok(res);
+                
+            }catch(NoSuchItemInDbException ex)
+            {
+                return NotFound(new ErrorDTO(404, ex.Message));
+            }catch(Exception ex)
+            {
+                return StatusCode(500, new ErrorDTO(500, ex.Message));
+            }
+        }
 
+        [Authorize(Roles ="Admin")]
+        [HttpGet("get-claim")]
+        [ProducesResponseType(typeof(IList<AdminClaimDTO>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetClaimsForCustomer()
+        {
+            try
+            {
+                var res = await _policyService.GetAllClaimsForCustomer();
+                return Ok(res);
 
+            }
+            catch (NoSuchItemInDbException ex)
+            {
+                return NotFound(new ErrorDTO(404, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ErrorDTO(500, ex.Message));
+            }
+        } 
+        [Authorize(Roles ="Admin")]
+        [HttpPatch("claim-status")]
+        [ProducesResponseType(typeof(IList<MessageDTO>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateClaimStatus([FromQuery] int claimId , [FromQuery] string status)
+        {
+            try
+            {
+                var res = await _policyService.ChangeClaimStatus(status, claimId);
+                return Ok(res);
 
+            }
+            catch (NoSuchItemInDbException ex)
+            {
+                return NotFound(new ErrorDTO(404, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ErrorDTO(500, ex.Message));
+            }
+        }
+
+        [Authorize(Roles="Admin")]
+        [HttpGet("paymentsDone")]
+        [ProducesResponseType(typeof(IList<Payment>), StatusCodes.Status200OK)]
+
+        public async Task<IActionResult> GetAllCompletedPaymnents()
+        {
+            try
+            {
+                var res = await _policyService.GetAllCompletedPaymentsForAdmin();
+                return Ok(res);
+
+            } catch (Exception ex)
+            {
+                return StatusCode(500 ,new ErrorDTO(500, ex.Message));
+            }
+        }
+
+        
+        
     }
 }

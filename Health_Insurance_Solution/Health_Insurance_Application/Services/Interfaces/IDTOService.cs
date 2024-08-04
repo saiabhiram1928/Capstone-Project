@@ -8,5 +8,6 @@ namespace Health_Insurance_Application.Services.Interfaces
         public UserReturnDTO MapUserToUserReturnDTO(User user , string Token);
         public User MapUserRegisterDTOToUser(UserRegisterDTO userRegisterDTO, string role, byte[] salt, byte[] passwd);
         public SchemeRoutesDTO MapSchemeToSchemeRouteDTO(Scheme scheme);
+        public Scheme MapSchemeCreateDTOToScheme(SchemeCreateDTO schemeCreateDTO);
     }
 }

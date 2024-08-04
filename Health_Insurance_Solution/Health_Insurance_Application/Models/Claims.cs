@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Health_Insurance_Application.Models
 {
@@ -11,6 +12,7 @@ namespace Health_Insurance_Application.Models
         public int ClaimId { get; set; }
         public int PolicyId { get; set; }
         [ForeignKey(nameof(PolicyId))]
+        [JsonIgnore]
         public Policy Policy { get; set; }
         public string ClaimReason { get; set; }
         public int CustomerId { get; set; }

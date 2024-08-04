@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardBody, Typography, Textarea, Input, Button, Select, Option } from '@material-tailwind/react';
 import { FetchUserProfile, UpdateProfile } from '../Context/ProfileManager'; // Adjust import path as needed
 
-const Portal_Profile_Page = ({ role }) => {
+const Portal_Profile_Page = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',

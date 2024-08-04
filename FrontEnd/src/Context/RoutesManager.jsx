@@ -16,6 +16,13 @@ import Portal_Layout from '../Portal_Layout.jsx'
 import Portal_Policy_Page from '../Pages/Portal_Policy_Page.jsx'
 import Portal_Payment_Page from '../Pages/Portal_Payment_Page.jsx'
 import ApplyClaimPage from '../Pages/Apply_Claim_Page.jsx'
+import Admin_Policy_Page from '../Pages/Admin_Policy_Page.jsx'
+import Admin_Claims_Page from '../Pages/Admin_Claims_Page.jsx'
+import Admin_ClaimsAndPolicy_Page from '../Pages/Admin_ClaimsAndPolicy_Page.jsx'
+import Admin_Payments_Page from '../Pages/Admin_Payments_Page.jsx'
+import Admin_Schemes_Page from '../Pages/Admin_Schemes_Page.jsx'
+import Admin_Scheme_Page from '../Pages/Admin_Scheme_Page.jsx'
+import Admin_AddSchemes_Page from '../Pages/Admin_AddSchemes_Page.jsx'
 
 const RoutesManager = () => {
     const { user , role } = useAuth()
@@ -33,11 +40,32 @@ const RoutesManager = () => {
        
       {
         user ? (<>
-        <Route path='/profile' element = {<Profile_Page/> }/>
-        <Route path = '/portal/profile' element = {<Portal_Layout><Portal_Profile_Page role = {role}/></Portal_Layout> } />
+         <Route path = '/portal/profile' element = {<Portal_Layout><Portal_Profile_Page role = {role}/></Portal_Layout> } />
+        {
+          role == "Customer" && (
+            <>
         <Route path='/apply-policy/:name' element={<ApplyPolicy_Page/>} />
         <Route path = '/portal/policies' element = {<Portal_Layout> <Portal_Policy_Page/></Portal_Layout> }/>
         <Route path = '/portal/payments' element = {<Portal_Layout> <Portal_Payment_Page/> </Portal_Layout>}/>
+        </>
+          )}
+          {
+            role == "Admin" && (
+              <>
+
+              <Route path = "/portal/admin/policies" element = {<Portal_Layout><Admin_Policy_Page/></Portal_Layout>}/>
+              <Route path = "/portal/admin/claims" element = {<Portal_Layout><Admin_Claims_Page/></Portal_Layout>}/>
+              <Route path = "/portal/admin/claims-policy/:id" element = {<Portal_Layout><Admin_ClaimsAndPolicy_Page/></Portal_Layout>}/>
+              <Route path = "/portal/admin/payments" element = {<Portal_Layout><Admin_Payments_Page/></Portal_Layout>}/>
+              <Route path = "/portal/admin/schemes" element = {<Portal_Layout><Admin_Schemes_Page/></Portal_Layout>}/>
+              <Route path = "/portal/admin/scheme/:name" element = {<Portal_Layout><Admin_Scheme_Page/></Portal_Layout>}/>
+              <Route path = "/portal/admin/scheme/add" element = {<Portal_Layout><Admin_AddSchemes_Page/></Portal_Layout>}/>
+              
+              
+              </>
+            )
+          }
+        
         </>) : (<>
           <Route path = '/login' element = {<Layout><Login_Page/></Layout>}/>
           <Route path = '/register' element = {<Layout><Register_Page/></Layout>}/>
@@ -45,7 +73,6 @@ const RoutesManager = () => {
       }
       <Route path = '*' element = {<NotFound_Page/>}/>
       <Route path = '/404-NotFound' element = {<NotFound_Page/>}/>
-  
     </Routes>
   )
 }

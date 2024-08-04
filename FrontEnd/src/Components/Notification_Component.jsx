@@ -10,6 +10,7 @@ import {
   } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import { fetchNotifications } from "../Context/PolicyManager";
+import { useAuth } from "../Context/AuthAndStateManager";
    
   const ClockIcon = ()=> {
     return (
@@ -34,6 +35,9 @@ import { fetchNotifications } from "../Context/PolicyManager";
 const Notification_Component = ()=> {
   const [loading, setLoading] = useState(false)
   const [notifications, setNotifications] = useState([]);
+  const {role} = useAuth()
+
+  if(role == "Admin") return;
 
   useEffect(()=>{
     const FetchData = async()=>{

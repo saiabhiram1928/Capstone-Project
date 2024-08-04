@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button, Dialog, Typography } from "@material-tailwind/react";
 import Apply_Claim_Page from './Apply_Claim_Page.jsx';
-import { ApplyRenewal, FetchPolicies } from '../Context/PolicyManager.jsx';
+import { ApplyRenewal, FetchPolicies, fetchPoliciesForAdmin } from '../Context/PolicyManager.jsx';
 
 
 // Dummy data with claims and payments
@@ -76,25 +76,8 @@ import { ApplyRenewal, FetchPolicies } from '../Context/PolicyManager.jsx';
 // ];
 
 const PolicyDetails = ({ policy }) => {
-    const [dialogOpen, setDialogOpen] = useState(false)
     console.log(policy);
     const noPaymentsMade = policy.payments.length === 0 || policy.lastPaymentDate === "0001-01-01T00:00:00";
-  const handleOpen = () => setDialogOpen(!dialogOpen);
-  const isNearExpiry = (expiryDate) => {
-    const today = new Date();
-    const expiry = new Date(expiryDate);
-    const timeDiff = expiry - today;
-    const daysToExpiry = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-    return daysToExpiry <= 30; // Adjust the threshold as needed
-};
-const handlePolicyExpiry=  async ()=>{
-  try{
-    const data =await ApplyRenewal(policy.policyId);
-    alert(data.message);
-  }catch(err){
-    alert(err);
-  }
-}
   return (
     <div key={policy.policyId} className="border border-gray-200 p-4 rounded-lg bg-white shadow-sm mb-4">
         <div className='flex md:justify-between justify-evenly items-center mb-5'>
@@ -102,15 +85,6 @@ const handlePolicyExpiry=  async ()=>{
         {policy.scheme.schemeName} 
         </Typography>
         <div>
-        <Button size='sm' onClick={handleOpen}>Apply For Calim</Button>
-        <Dialog open={dialogOpen} className='bg-black' handler={handleOpen}>
-            <Apply_Claim_Page policy={policy}/>
-        </Dialog>
-        {isNearExpiry(policy.policyExpiryDate) && (
-        <Button size='sm' color='green' onClick={handlePolicyExpiry()}>
-           Renew
-          </Button>
-        )}
         </div>
         </div>
     
@@ -118,8 +92,8 @@ const handlePolicyExpiry=  async ()=>{
         <div><strong>Policy ID:</strong> {policy.policyId}</div>
         <div><strong>Start Date:</strong> {new Date(policy.policyStartDate).toLocaleDateString()}</div>
         <div><strong>End Date:</strong> {new Date(policy.policyEndDate).toDateString()}</div>
-        <div><strong>Premium Amount:</strong> ₹ {policy.premiumAmount}</div>
-        <div><strong>Quote Amount:</strong> ₹ {policy.quoteAmount}</div>
+        <div><strong>Premium Amount:</strong> ${policy.premiumAmount}</div>
+        <div><strong>Quote Amount:</strong> ${policy.quoteAmount}</div>
         <div><strong>Last Payment Date:</strong> {noPaymentsMade ? 'No payments made' : new Date(policy.lastPaymentDate).toLocaleDateString()}</div>
         <div><strong>Next Payment Due Date:</strong> {new Date(policy.nextPaymentDueDate).toDateString()}</div>
         <div><strong>Expiry Date:</strong> {new Date(policy.policyExpiryDate).toDateString()}</div>
@@ -146,8 +120,6 @@ const handlePolicyExpiry=  async ()=>{
           </div>
         )}
       </div>
-
-      {/* Claims Section */}
       {policy.claims && (
         <div className="mt-6">
           <Typography variant='h6' className='text-blue-500 mb-2'>
@@ -170,7 +142,7 @@ const handlePolicyExpiry=  async ()=>{
                   {policy.claims.map(claim => (
                     <tr key={claim.claimId}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{claim.claimId}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{claim.amountClaimed}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${claim.claimAmount}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{claim.claimStatus}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(claim.claimedDate).toLocaleDateString()}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{claim.acceptedDate ===  "0001-01-01T00:00:00" ? "TBA" : new Date(claim.acceptedDate).toLocaleDateString()}</td>
@@ -207,7 +179,7 @@ const handlePolicyExpiry=  async ()=>{
                   {policy.payments.map(payment => (
                     <tr key={payment.transactionId}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{payment.transactionId}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{payment.paymentAmount}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${payment.paymentAmount}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(payment.paymentDate).toLocaleDateString()}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payment.paymentStatus}</td>
                     </tr>
@@ -258,18 +230,21 @@ const handlePolicyExpiry=  async ()=>{
 
 // Main page component
 const Portal_Policy_Page = () => {
+  const {id} = useParams();
+  const navigate = useNavigate();
   const [policies, setPolicies] = useState([]);
   const [loading, setLoading] = useState(false)
   useEffect(()=>{
     const fetchData = async ()=>{
       try{
         setLoading(true);
-        const data = await FetchPolicies();
+        const data = await fetchPoliciesForAdmin(parseInt(id));
         setPolicies(data)
-      }catch(err){
+      }catch(Err){
         alert(err)
       }finally{
         setLoading(false);
+        navigate("/404-notfound")
       }
     }
     fetchData();

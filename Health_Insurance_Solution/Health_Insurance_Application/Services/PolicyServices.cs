@@ -42,6 +42,10 @@ namespace Health_Insurance_Application.Services
                 using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
                     var scheme = await _schemeRepo.GetById(policyApplyDTO.schemeId);
+                    if(scheme.IsActive == false)
+                    {
+                        throw new UnauthorizedAccessException("The Scheme is Not Active");
+                    }
                     var check = await _policyRepo.CheckUserAppliedForPolicy(policyApplyDTO.schemeId);
                     if (check)
                     {
@@ -422,5 +426,125 @@ namespace Health_Insurance_Application.Services
                 throw;
             }
         }
+
+        public async Task<PolicyAnalyticsDTO> PolicyAnalytics()
+        {
+            PolicyAnalyticsDTO policyAnalyticsDTO = new PolicyAnalyticsDTO();
+            policyAnalyticsDTO.WeekData = await _policyRepo.GetPoliciesCountByWeek();
+            policyAnalyticsDTO.MonthData = await _policyRepo.GetPoliciesCountByWeekInMonth();
+            policyAnalyticsDTO.PoliciesAppliedinMonth = await _policyRepo.GetTotalPoliciesThisMonth();
+            policyAnalyticsDTO.PoliciesAppliedinWeek = await _policyRepo.GetTotalPoliciesThisWeek();
+            policyAnalyticsDTO.MostApplied = await _policyRepo.GetMostAppliedScheme();
+            policyAnalyticsDTO.ClaimsAppledinMonth = await _claimRepo.ClaimsAppledinMonth();
+            var schemes = await _schemeRepo.GetAll();
+            var schemeAnalyticsDTOs =new List<SchemesAnalyticsDTO>();
+            foreach(var scheme in schemes)
+            {
+                var schemeAnalyticsDTO = new SchemesAnalyticsDTO();
+                schemeAnalyticsDTO.schemeName = scheme.SchemeName;
+                schemeAnalyticsDTO.SchemeCategory = scheme.SchemeType.ToString();
+                schemeAnalyticsDTO.Count = await _policyRepo.GetPolicyCountForASchme(scheme.SchemeId);
+                schemeAnalyticsDTO.schemeId = scheme.SchemeId;
+                schemeAnalyticsDTOs.Add(schemeAnalyticsDTO);
+            }
+
+            policyAnalyticsDTO.SchemesAnalyticsDTOs = schemeAnalyticsDTOs;
+            return policyAnalyticsDTO;
         }
+        public async Task<IList<PolicyReturnDTO>> FetchPolicyOfCustomerForAdmin(int customerId)
+        {
+            var customer = await _customerRepo.GetById(customerId);
+            var policies = await _policyRepo.GetAllPoliciesAsync(customer.CustomerId);
+            var policyReturnDTOs = new List<PolicyReturnDTO>();
+            foreach (var pol in policies)
+            {
+                var policyReturnDTO = new PolicyReturnDTO()
+                {
+                    PolicyId = pol.PolicyId,
+                    Payments = pol.Payments.Where(p => p.PaymentDone == true).ToList(),
+                    CorporateEmployees = pol.CorporateEmployees.ToList(),
+                    Claims = pol.Claims.ToList(),
+                    FamilyMembers = pol.FamilyMembers.ToList(),
+                    LastPaymentDate = pol.LastPaymentDate,
+                    NextPaymentDueDate = pol.NextPaymentDueDate,
+                    PolicyEndDate = pol.PolicyEndDate,
+                    policyExpiryDate = pol.PolicyExpiryDate,
+                    PolicyStartDate = pol.PolicyStartDate,
+                    PremiumAmount = pol.PremiumAmount,
+                    QuoteAmount = pol.QuoteAmount,
+                    RenewalStatus = pol.RenewalStatus.ToString(),
+                    Scheme = pol.Scheme,
+                    Renewals = pol.Renewals.ToList()
+                };
+                policyReturnDTOs.Add(policyReturnDTO);
+            }
+            return policyReturnDTOs;
+        }
+
+        public async Task<IList<AdminClaimDTO>> GetAllClaimsForCustomer()
+        {
+            var claims = await _claimRepo.GetAll();
+            var adminClaimDTOs = new List<AdminClaimDTO>();
+            foreach(var claim in claims)
+            {
+                var user = await _customerRepo.GetUserFromCustomerId(claim.CustomerId);
+                AdminClaimDTO adminClaimDTO = new AdminClaimDTO()
+                {
+                    ClaimAmount = claim.AmountClaimed,
+                    ClaimAppliedOn = claim.ClaimedDate,
+                    ClaimId = claim.ClaimId,
+                    ClaimStatus = claim.ClaimStatus.ToString(),
+                    CustomerEmail = user.Email,
+                    CustomerId = claim.CustomerId,
+                };
+                adminClaimDTOs.Add(adminClaimDTO);
+            }
+            return adminClaimDTOs;
+        } 
+       public async Task<MessageDTO> ChangeClaimStatus(string status , int claimId)
+        {
+            var claim = await _claimRepo.GetById(claimId);
+            int uid = _tokenHelper.GetUidFromToken();
+            if(status == "Accepted")
+            {
+                claim.ClaimStatus = ClaimStatusEnum.Approved;
+                claim.AcceptedDate =DateTime.Now;
+                claim.ApprovedBy = uid;
+                claim.AmountApproved = claim.AmountClaimed;
+                Payment payment = new Payment()
+                {
+                    CustomerId = claim.CustomerId,
+                    PaymentAmount = claim.AmountClaimed,
+                    PaymentDone = true,
+                    PaymentDate = DateTime.Now,
+                    PaymentDueDate = DateTime.Now,
+                    PaymentStatus = "Paid",
+                    PolicyId = claim.PolicyId,
+                    Remarks = "Claim Of Customer",
+                    PaymentType = PaymentTypeEnum.Claim,
+                };
+                payment = await _paymentRepo.Add(payment);
+                payment.TransactionId = payment.Id;
+                await _paymentRepo.Update(payment);
+            }
+            else
+            {
+                claim.ClaimStatus = ClaimStatusEnum.Rejected;
+            }
+            await _claimRepo.Update(claim);
+            return new MessageDTO()
+            {
+                Message = "Claim Status Changed Sucesfully"
+            };
+        }
+
+        public async Task<IList<Payment>> GetAllCompletedPaymentsForAdmin()
+        {
+            var payments = await _paymentRepo.GetAll();
+            payments = payments.Where(p => p.PaymentDone == true || p.PaymentStatus == "Paid");
+            return payments.ToList();
+        }
+
+       
+    }
 }

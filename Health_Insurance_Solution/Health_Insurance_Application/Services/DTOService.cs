@@ -48,5 +48,27 @@ namespace Health_Insurance_Application.Services
             return schemeRoutesDTO;
 
         }
+
+        public Scheme MapSchemeCreateDTOToScheme(SchemeCreateDTO schemeCreateDTO)
+        {
+            Scheme scheme = new Scheme()
+            {
+                BaseCoverageAmount = schemeCreateDTO.BaseCoverageAmount,
+                BasePremiumAmount = schemeCreateDTO.BasePremiumAmount,
+                CoverageAmount = schemeCreateDTO.CoverageAmount,
+                IsActive = true,
+                CoverageYears = schemeCreateDTO.CoverageYears,
+                PaymentTerm = schemeCreateDTO.PaymentTerm,
+                RouteTitle = schemeCreateDTO.RouteTitle,
+                SchemeDescription = schemeCreateDTO.SchemeDescription,
+                SchemeStartedAt = DateTime.UtcNow,
+                SchemeLastUpdatedAt = DateTime.UtcNow,
+                SchemeName = schemeCreateDTO.SchemeName,
+                SmallDescription = schemeCreateDTO.SmallDescription,
+                SchemeType = schemeCreateDTO.SchemeType,
+
+            };
+            return scheme;
+        }
     }
 }

@@ -2,6 +2,7 @@
 using Health_Insurance_Application.Exceptions;
 using Health_Insurance_Application.Services;
 using Health_Insurance_Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.Common;
@@ -92,7 +93,15 @@ namespace Health_Insurance_Application.Controllers
                     return Ok(res);
                 }
                 return BadRequest(new ErrorDTO( 400, "Please Check payload"));
-            }catch(NoSuchItemInDbException ex)
+            }catch(UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new ErrorDTO(400 , ex.Message));
+            }
+            catch(NullReferenceException ex)
+            {
+                return NotFound(new ErrorDTO(404, "Scheme is Not Active"));
+            }
+            catch(NoSuchItemInDbException ex)
             {
                 return NotFound(new ErrorDTO(404, ex.Message));
             }
@@ -100,8 +109,66 @@ namespace Health_Insurance_Application.Controllers
             catch(Exception ex)
             {
                 return StatusCode(500, new ErrorDTO(500, ex.Message)) ;
+            }   
+        }
+        [Authorize(Roles ="Admin")]
+        [HttpGet("getAll")]
+        public async Task<IActionResult> GetAllSchemeForAdmin()
+        {
+            try { 
+                var res = await _schemeService.GetAllSchemesForAdmin();
+                return Ok(res);
+            }catch(Exception ex)
+            {
+                return StatusCode(500, new ErrorDTO(500, ex.Message));
+            }
+        }
+        [Authorize(Roles="Admin")]
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateScheme([FromBody]SchemeCreateDTO schemeCreateDTO, [FromQuery] int schemeId)
+        {
+            try
+            {
+                var res = await _schemeService.UpdateScheme(schemeCreateDTO, schemeId);
+                return Ok(res);
+            }catch(NoSuchItemInDbException ex)
+            {
+                return NotFound(new ErrorDTO(404, ex.Message));
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, new ErrorDTO(500, ex.Message));
+            }
+        }
+        [Authorize(Roles ="Admin")]
+        [HttpPost("add")]
+        [ProducesResponseType(typeof(SchemeCreateDTO), StatusCodes.Status200OK)]
+        public async Task<IActionResult> CreateScheme([FromBody] SchemeCreateDTO schemeCreateDTO)
+        {
+            try
+            {
+                var res = await _schemeService.CreateScheme(schemeCreateDTO);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ErrorDTO(500, ex.Message));
             }
         }
 
+        [Authorize(Roles ="Admin")]
+        [HttpPost("activity")]
+        [ProducesResponseType(typeof(MessageDTO), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateSchemeActivity([FromQuery] string payload , [FromQuery] string route)
+        {
+            try
+            {
+                var res = await _schemeService.ChangeSchemeActivity(payload, route);
+                return Ok(res);
+            }catch(Exception ex)
+            {
+                return StatusCode(500, new ErrorDTO(500, ex.Message));
+            }
+        }
     }
 }

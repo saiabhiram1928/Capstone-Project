@@ -25,5 +25,16 @@ namespace Health_Insurance_Application.Repositories
         {
             return await _context.Customers.AnyAsync(item => item.Uid == uid);
         }
+
+        public async Task<User> GetUserFromCustomerId(int customerId)
+        {
+            var customer =await _context.Customers.Include(item => item.User)
+                .SingleOrDefaultAsync(item => item.CustomerId == customerId);
+            if(customer == null)
+            {
+                throw new NoSuchItemInDbException($"The Customer With {customerId} doesnt exist");
+            }
+            return customer.User;
+        }
     }
 }

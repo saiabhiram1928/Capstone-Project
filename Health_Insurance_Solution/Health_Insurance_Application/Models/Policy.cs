@@ -23,7 +23,7 @@ namespace Health_Insurance_Application.Models
         public int QuotePaymentTerm { get; set; }
         public DateTime LastPaymentDate { get; set; }
         public DateTime NextPaymentDueDate { get; set; }
-
+      
         public int CoverageYears { get; set; }
         public DateTime PolicyExpiryDate { get; set; }
         public RenewalStatusEnum RenewalStatus { get; set; }

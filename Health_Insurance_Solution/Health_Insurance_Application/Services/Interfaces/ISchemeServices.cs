@@ -10,5 +10,9 @@ namespace Health_Insurance_Application.Services.Interfaces
         public Task<IList<SchemeRoutesDTO>> GetAllSchemeRoutes();
         public Task<Scheme> GetSchemeById(int schemeId);
         public Task<Scheme> GetByRouteTitle(string routeTitle);
+        public Task<IList<SchemesAdminDTO>> GetAllSchemesForAdmin();
+        public Task<MessageDTO> UpdateScheme(SchemeCreateDTO schemeCreateDTO, int schemeId);
+        public Task<MessageDTO> CreateScheme(SchemeCreateDTO schemeCreateDTO);
+        public Task<MessageDTO> ChangeSchemeActivity(string payload, string routeTitle);
     }
 }

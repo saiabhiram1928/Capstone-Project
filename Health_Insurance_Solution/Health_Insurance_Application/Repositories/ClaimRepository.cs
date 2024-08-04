@@ -22,6 +22,14 @@ namespace Health_Insurance_Application.Repositories
             var claim = await _context.Claims.Where(c => c.CustomerId == customerId).OrderByDescending(c => c.ClaimedDate).FirstOrDefaultAsync();
             return claim;
         }
+        public async Task<int> ClaimsAppledinMonth()
+        {
+            var startOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            var endOfMonth = startOfMonth.AddMonths(1);
 
+            return await _context.Claims
+                .Where(c => c.ClaimedDate >= startOfMonth && c.ClaimedDate < endOfMonth)
+                .CountAsync();
+        }
     }
 }
